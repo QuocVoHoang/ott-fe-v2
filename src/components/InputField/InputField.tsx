@@ -11,7 +11,7 @@ const InputField: React.FC<Props> = ({ startIcon, endIcon, onShowPassword, ...in
     <div className="relative w-full mt-2">
       <input
         {...inputProps}
-        className="w-[376px] h-[44px] pl-10 pr-4 py-2 rounded-lg border border-solid border-[#DBDBDB]"
+        className={`w-[376px] h-[44px] pr-4 py-2 rounded-lg border border-solid border-[#DBDBDB] ${startIcon ? 'pl-10' : 'pl-2'}`}
       />
       {startIcon}
       {

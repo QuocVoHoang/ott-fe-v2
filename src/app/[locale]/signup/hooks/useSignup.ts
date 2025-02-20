@@ -51,7 +51,7 @@ export const useSignup = () => {
 
 	const onSubmit = async (data: ISchemaData) => {
     try {
-			const response = await axios.post(`${API_SERVER}/user/`, {
+			const response = await axios.post(`${API_SERVER}/user/signup`, {
 				username: data.email,
 				email: data.email,
 				password: data.password

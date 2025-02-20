@@ -1,9 +1,9 @@
-import { MessageType, Navigation } from "./enum";
+import { GroupType, MessageType, Navigation } from "./enum";
 
 export interface IUser {
-  id?: string;
-  username?: string;
-  email?: string;
+  id: string;
+  username: string;
+  email: string;
   avatarUrl: string;
 }
 
@@ -26,4 +26,14 @@ export interface IMessage {
   file_url?: string
   created_at?: string
   updated_at?: string
+}
+
+export interface IConversation {
+  id: string,
+  name: string,
+  type: GroupType,
+  avatar_url: string,
+  created_by: string,
+  created_at: string,
+  updated_at: string,
 }

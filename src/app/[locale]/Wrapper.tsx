@@ -5,11 +5,20 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner"
 import TopNavBar from "@/components/TopNavBar/TopNavBar"
 import { IUser } from "@/constants/interface"
 import { usePathname, useRouter } from "@/i18n/routing"
-import { isAuthenticatedState, isBodyLoadingState, isPageLoadingState, userState } from "@/jotai/jotai-state"
+import { 
+  isAuthenticatedState, 
+  isBodyLoadingState, 
+  isOpenDeleteChatState, 
+  isOpenNewChatState, 
+  isPageLoadingState, 
+  userState 
+} from "@/jotai/jotai-state"
 import axios from "axios"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { API_SERVER } from "@/constants/constants";
+import NewChatModal from "@/components/Modals/NewChatModal"
+import DeleteChatModal from "@/components/Modals/DeleteChatModal"
 
 export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const router = useRouter()
@@ -17,6 +26,8 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const [user , setUser] = useAtom(userState)
   const [isPageLoading, setIsPageLoading] = useAtom(isPageLoadingState)
   const [isBodyLoading, setIsBodyLoading] = useAtom(isBodyLoadingState)
+  const [isOpenNewChat, ] = useAtom(isOpenNewChatState)
+  const [isOpenDeleteChat, ] = useAtom(isOpenDeleteChatState)
   const [isAuthenticated] = useAtom(isAuthenticatedState)
 
   useEffect(() => {
@@ -28,12 +39,13 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
           headers: { Authorization: `Bearer ${token}` },
         })
         const responsedUser = response.data
-        setUser({
+        const loginUser = {
           id: responsedUser.id,
           username: responsedUser.username,
           email: responsedUser.email,
           avatarUrl: responsedUser.avatar_url,
-        } as IUser)
+        } as IUser
+        setUser(loginUser)
         if(pathname === '/signin' || pathname === '/signup') {
           setIsPageLoading(true)
           router.push("/")
@@ -64,16 +76,26 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   }, [router, pathname, isAuthenticated, setUser, setIsPageLoading, setIsBodyLoading])
 
   useEffect(() => {
-    console.log('user', user)
+    console.log("LOGIN USER", user)
   }, [user])
 
   return(
     <>
+      {isOpenNewChat &&
+        <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
+          <NewChatModal />
+        </div>
+      }
+      {isOpenDeleteChat &&
+        <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
+          <DeleteChatModal />
+        </div>
+      }
       {isPageLoading &&
         <div className="w-screen h-screen flex items-center justify-center">
         <LoadingSpinner />
       </div>}
-      {!isPageLoading &&
+      {!isPageLoading && 
       <div className="w-full h-full flex overflow-hidden">
         {pathname !== '/signin' && pathname !== '/signup' && <LeftSideBar />}
         <div className="flex flex-col">
@@ -90,6 +112,5 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
       </div>
       }
     </>
-    
   )
 }

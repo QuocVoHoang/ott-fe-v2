@@ -11,3 +11,7 @@ export enum MessageType {
   VIDEO = 'video'
 }
 
+export enum GroupType {
+  PRIVATE = 'private',
+  GROUP = 'group'
+}

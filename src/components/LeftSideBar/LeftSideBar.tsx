@@ -2,13 +2,27 @@ import { isSidebarOpenState } from "@/jotai/jotai-state";
 import clsx from "clsx";
 import { useAtom } from "jotai";
 import { ChevronRight, SidebarClose } from "lucide-react";
-import DropdownMenu from "../DropdownMenu/DropdownMenu";
 import { SIDEBAR_MENU } from "@/constants/constants";
 import { useTranslations } from "next-intl";
+import Navigator from "./Navigator/Navigator";
+import ChatList from "./ChatList/ChatList";
+import SearchComponent from "./SearchComponent/SearchComponent";
+import NewChatButton from "./NewChatButton/NewChatButton";
+import { useState } from "react";
+import { useConversation } from "@/hooks/useConversation";
 
 export default function LeftSideBar() {
   const [sidebarOpen, setSidebarOpen] = useAtom(isSidebarOpenState)
   const t = useTranslations('LeftSidebar')
+  const [query, setQuery] = useState<string>("")
+  
+  const {
+    conversations,
+  } = useConversation()
+
+  // const filteredConversations = conversations?.filter((item) =>
+  //   item.name.toLowerCase().includes(query.toLowerCase())
+  // )
   
   return(
     <div 
@@ -21,11 +35,20 @@ export default function LeftSideBar() {
 
       <div 
         className={clsx({'w-sidebar-open': sidebarOpen, 'w-sidebar-close': SidebarClose},
-        "w-full h-sidebar-body-height overflow-auto transition-all duration-300 ease-in-out")}
+        "w-full h-sidebar-body-height transition-all duration-300 ease-in-out overflow-hidden flex")}
       >
         {SIDEBAR_MENU.map((menu, index) => 
-          <DropdownMenu menu={menu} key={index} isSidebarOpen={sidebarOpen}/>
+          <Navigator key={index} item={menu} sidebarOpen={sidebarOpen}/>
         )}
+
+        {
+          sidebarOpen &&
+          <div className="flex flex-col w-chatlist h-full">
+            <SearchComponent query={query} setQuery={setQuery}/>
+            <ChatList conversations={conversations}/>
+            <NewChatButton />
+          </div>
+        }
       </div>
 
       <button 

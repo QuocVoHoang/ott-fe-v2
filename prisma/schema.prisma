@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model conversation_participants {
+  id              String        @id @db.VarChar(36)
+  conversation_id String        @db.VarChar(36)
+  user_id         String        @db.VarChar(36)
+  conversations   conversations @relation(fields: [conversation_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model conversations {
+  id                        String                      @id @db.VarChar(36)
+  name                      String                      @unique @db.VarChar
+  type                      conversation_type
+  avatar_url                String?                     @db.VarChar
+  created_by                String                      @db.VarChar(36)
+  created_at                DateTime?                   @db.Timestamp(6)
+  updated_at                DateTime?                   @db.Timestamp(6)
+  conversation_participants conversation_participants[]
+  users                     users                       @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  messages                  messages[]
+}
+
+model messages {
+  id              String        @id @db.VarChar(36)
+  conversation_id String        @db.VarChar(36)
+  sender_id       String        @db.VarChar(36)
+  content         String?       @db.VarChar
+  type            message_type
+  file_url        String?       @db.VarChar
+  created_at      DateTime?     @db.Timestamp(6)
+  updated_at      DateTime?     @db.Timestamp(6)
+  conversations   conversations @relation(fields: [conversation_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users         @relation(fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                        String                      @id @db.VarChar(36)
+  username                  String                      @db.VarChar
+  email                     String                      @unique @db.VarChar
+  password                  String                      @db.VarChar
+  avatar_url                String?                     @db.VarChar
+  created_at                DateTime?                   @db.Timestamp(6)
+  updated_at                DateTime?                   @db.Timestamp(6)
+  conversation_participants conversation_participants[]
+  conversations             conversations[]
+  messages                  messages[]
+}
+
+enum conversation_type {
+  private
+  group
+}
+
+enum message_type {
+  text
+  image
+  file
+  audio
+  video
+}

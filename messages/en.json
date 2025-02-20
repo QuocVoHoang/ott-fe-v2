@@ -1,0 +1,37 @@
+{
+  "SigninPage": {
+    "title": "Sign in",
+    "emailAddress": "Email Address",
+    "password": "Password",
+    "signinButton": "Sign in",
+    "or": "or",
+    "subtitle": "Don't have an account?",
+    "signupButton": "Sign up"
+  },
+  "SignupPage": {
+    "title": "Create an account",
+    "emailAddress": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "signupButton": "Sign up",
+    "or": "or", 
+    "subtitle": "Already have an account?",
+    "signinButton": "Sign in"
+  },
+  "LeftSidebar": {
+    "chat": "Chat",
+    "contact": "Contact",
+    "Monitoring": "Monitoring",
+    "Home": "Home",
+    "Orders": "Orders",
+    "Products": "Products",
+    "Customers": "Customers",
+    "Marketing": "Marketing",
+    "Discounts": "Discounts",
+    "HideTab": "Hide tab"
+  },
+  "TopNavbar": {
+    "profile": "Profile",
+    "logout": "Logout"
+  }
+}

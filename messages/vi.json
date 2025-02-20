@@ -1,0 +1,37 @@
+{
+  "SigninPage": {
+    "title": "Đăng nhập",
+    "emailAddress": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "signinButton": "Đăng nhập",
+    "or": "hoặc",
+    "subtitle": "Bạn chưa có tài khoản?",
+    "signupButton": "Đăng ký"
+  },
+  "SignupPage": {
+    "title": "Tạo tài khoản",
+    "emailAddress": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "signupButton": "Đăng ký",
+    "or": "hoặc", 
+    "subtitle": "Bạn đã có tài khoản?",
+    "signinButton": "Đăng nhập"
+  },
+  "LeftSidebar": {
+    "chat": "Tin nhắn",
+    "contact": "Danh bạ",
+    "Monitoring": "Giám sát",
+    "Home": "Nhà",
+    "Orders": "Đơn hàng",
+    "Products": "Sản phẩm",
+    "Customers": "Khách hàng",
+    "Marketing": "Tiếp thị",
+    "Discounts": "Giảm giá",
+    "HideTab": "Ẩn"
+  },
+  "TopNavbar": {
+    "profile": "Hồ sơ",
+    "logout": "Đăng suất"
+  }
+}

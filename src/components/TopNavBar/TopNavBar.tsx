@@ -62,7 +62,7 @@ export default function TopNavBar() {
         </div>
         {isShowPanel &&
           <div 
-            className="absolute top-15 left-2 p-2 h-fit transition-all duration-300 ease-in-out bg-[#cfcbca] shadow-xl rounded-lg" 
+            className="absolute top-15 left-2 p-2 h-fit transition-all duration-300 ease-in-out bg-[#cfcbca] shadow-xl rounded-lg z-50" 
             ref={panelRef}
           >
             <PanelItem name={t('profile')} ItemIcon={<User />} />

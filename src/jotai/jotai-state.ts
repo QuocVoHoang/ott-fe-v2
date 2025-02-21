@@ -1,4 +1,4 @@
-import { IConversation, IUser } from '@/constants/interface';
+import { IConversation, IMessage, IUser } from '@/constants/interface';
 import { atom } from 'jotai';
 
 export const isAuthenticatedState = atom<boolean>(false)
@@ -16,3 +16,5 @@ export const isOpenNewChatState = atom<boolean>(false)
 export const isOpenDeleteChatState = atom<boolean>(false)
 
 export const currentConversationState = atom<IConversation | null>(null)
+
+export const currentMessagesState = atom<IMessage[]>([])

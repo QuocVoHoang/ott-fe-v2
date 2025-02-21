@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { GroupType } from "@/constants/enum"
 import { Trash, Plus } from "lucide-react"
 import { useConversation } from "@/hooks/useConversation"
-import { useUser } from "@/hooks/userUser"
+import { useUser } from "@/hooks/useUser"
 
 export default function NewChatModal() {
   const [user , ] = useAtom(userState)
@@ -126,7 +126,7 @@ export default function NewChatModal() {
         </button>
 
         <div className="flex justify-end w-full h-fit">
-          <button className="w-[100px] bg-red-300 h-[40px]">cancel</button>
+          <button className="w-[100px] bg-red-300 h-[40px]" onClick={() => setIsOpenNewChat(false)}>cancel</button>
           <button className="w-[100px] bg-blue-300 h-[40px]"
             onClick={onCreateNewGroupChat}
           >Create</button>

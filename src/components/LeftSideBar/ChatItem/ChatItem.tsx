@@ -1,21 +1,26 @@
 'use client'
 
 import { IConversation } from "@/constants/interface"
+import { usePathname } from "@/i18n/routing";
 import { currentConversationState, isOpenDeleteChatState } from "@/jotai/jotai-state";
+import clsx from "clsx";
 import { useAtom } from "jotai";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import Image from 'next/image';
 import { JSX, useEffect, useRef, useState } from "react";
 
 
-export default function ChatItem({item}:{item: IConversation}){
+export default function ChatItem({item}: {item: IConversation}){
   const panelRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLDivElement>(null)
   const [isShowPanel, setIsShowPanel] = useState<boolean>(false)
   const [, setIsOpenDeleteChat] = useAtom(isOpenDeleteChatState)
   const [, setCurrentConversation] = useAtom(currentConversationState)
+  const [isSelecting, setIsSelecting] = useState<boolean>(false)
+  const pathname = usePathname()
 
   const onOpenDeleteModal =() => {
+    setIsShowPanel(false)
     setIsOpenDeleteChat(true)
   }
 
@@ -23,7 +28,6 @@ export default function ChatItem({item}:{item: IConversation}){
     setIsShowPanel((prev) => !prev);
   };
   
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -45,18 +49,26 @@ export default function ChatItem({item}:{item: IConversation}){
     };
   }, [isShowPanel]);
 
+  useEffect(() => {
+    setIsSelecting(pathname.includes(`${item.id}`))
+  }, [pathname])
+
   return(
-    <div className="w-full h-[80px] hover:bg-slate-300 cursor-pointer flex items-center justify-between pl-3 transition-all duration-300"
+    <div className={clsx(
+      {'bg-slate-300': isSelecting},
+      "w-full h-[80px] hover:bg-slate-300 cursor-pointer flex items-center justify-between pl-3 transition-all duration-300"
+    )}
       onClick={() => setCurrentConversation(item)}
     >
       <div className="flex">
         <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center" >
-          {item.avatar_url ? 
-            <Image src={item.avatar_url} alt="" className="w-full h-full" /> :
-            <div className="font-extrabold text-black text-xl">
-              {item.name.charAt(0)}
-            </div>
-          }
+        {item.avatar_url && item.avatar_url.startsWith("http") ? (
+          <Image src={item.avatar_url} alt="" className="w-full h-full" width={40} height={40} />
+        ) : (
+          <div className="font-extrabold text-black text-xl">
+            {item.name.charAt(0)}
+          </div>
+        )}
         </div>
         <div className="ml-2 flex flex-col">
           <div className="text-lg font-bold">
@@ -78,7 +90,7 @@ export default function ChatItem({item}:{item: IConversation}){
       {isShowPanel &&
         <div
           ref={panelRef}
-          className="absolute top-15 right-[-32%] p-2 h-fit transition-all duration-300 ease-in-out bg-[#cfcbca] shadow-xl rounded-lg"
+          className="absolute top-15 right-[-32%] z-50 p-2 h-fit transition-all duration-300 ease-in-out bg-[#cfcbca] shadow-xl rounded-lg"
         >
           <PanelItem name="Edit" ItemIcon={<Pencil />}/>
           <PanelItem name="Delete" ItemIcon={<Trash2 />} onHandler={onOpenDeleteModal}/>

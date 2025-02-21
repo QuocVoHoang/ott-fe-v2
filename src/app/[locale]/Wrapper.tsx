@@ -23,7 +23,7 @@ import DeleteChatModal from "@/components/Modals/DeleteChatModal"
 export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const router = useRouter()
   const pathname = usePathname()
-  const [user , setUser] = useAtom(userState)
+  const [ , setUser] = useAtom(userState)
   const [isPageLoading, setIsPageLoading] = useAtom(isPageLoadingState)
   const [isBodyLoading, setIsBodyLoading] = useAtom(isBodyLoadingState)
   const [isOpenNewChat, ] = useAtom(isOpenNewChatState)
@@ -75,10 +75,6 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
     setIsBodyLoading(false)
   }, [router, pathname, isAuthenticated, setUser, setIsPageLoading, setIsBodyLoading])
 
-  useEffect(() => {
-    console.log("LOGIN USER", user)
-  }, [user])
-
   return(
     <>
       {isOpenNewChat &&
@@ -105,7 +101,7 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
                 <LoadingSpinner />
               </div>
             }
-            {!isBodyLoading && <div className="w-full h-sidebar-body-height">
+            {!isBodyLoading && <div className="w-full h-main-body-height">
               {children}
             </div>}
         </div>

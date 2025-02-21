@@ -1,12 +1,14 @@
 "use client"
 
-import WebSocketComponent from "@/hooks/useWebSocket";
+import { useRouter } from "@/i18n/routing";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter()
+  useEffect(() => {
+    router.push('/chat')
+  }, [])
   return (
-    <div>
-      <WebSocketComponent />
-
-    </div>
+    <div></div>
   );
 }

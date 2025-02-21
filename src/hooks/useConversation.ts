@@ -2,12 +2,14 @@
 
 import { API_SERVER } from "@/constants/constants";
 import { IConversation } from "@/constants/interface";
+import { useRouter } from "@/i18n/routing";
 import { currentConversationState, userState } from "@/jotai/jotai-state";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 
 export const useConversation =() => {
+  const router = useRouter()
   const [user , ] = useAtom(userState)
   const [currentConversation, setCurrentConversation] = useAtom(currentConversationState)
   const [conversations, setConversations] = useState<IConversation[]>([])
@@ -34,7 +36,8 @@ export const useConversation =() => {
     }
   }
 
-  const loadAllUserConversations =async() => {
+  const loadConversationsOfUser =async() => {
+    // LOAD ALL CONVERSATIONS OF A USER
     try {
       const response = await axios.get(`${API_SERVER}/user/${user?.email}/conversations`)
       setConversations(response.data)
@@ -45,7 +48,7 @@ export const useConversation =() => {
 
   const onDeleteGroupChat = async() => {
     try {
-      await axios.delete(`${API_SERVER}/conversation/${currentConversation?.name}`)
+      await axios.delete(`${API_SERVER}/conversation/${currentConversation?.id}`)
       setCurrentConversation(null)
     } catch (e) {
       console.error(e)
@@ -54,18 +57,22 @@ export const useConversation =() => {
 
   useEffect(() => {
     if(user !== null) {
-      loadAllUserConversations()
+      loadConversationsOfUser()
     }
   }, [user])
 
   useEffect(() => {
-    loadAllUserConversations()
+    if(currentConversation != null) {
+      router.push(`/chat/${currentConversation.id}`)
+    }
+    loadConversationsOfUser()
   }, [currentConversation]);  
 
   return {
     conversations, 
+    currentConversation,
 
     onCreateNewChat,
-    onDeleteGroupChat
+    onDeleteGroupChat,
   }
 }

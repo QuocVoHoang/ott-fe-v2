@@ -15,6 +15,8 @@ export const isOpenNewChatState = atom<boolean>(false)
 
 export const isOpenDeleteChatState = atom<boolean>(false)
 
+export const isOpenProfileState = atom<boolean>(false)
+
 export const currentConversationState = atom<IConversation | null>(null)
 
 export const currentMessagesState = atom<IMessage[]>([])

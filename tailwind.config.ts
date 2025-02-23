@@ -27,13 +27,14 @@ export default {
       },
       height: {
         'navbar-height': '64px',
-        'main-body-height': 'calc(100% - 64px)',
+        'main-body-height': '100%',
         'search-component-height': '50px',
-        'sidebar-body-height': 'calc(100% - 114px)',
+        'sidebar-body-height': '100%',
         'newchat-button': '50px',
         'chatlist-height': 'calc(100% - 100px)',
         'message-area-height': 'calc(100% - 80px)',
         'input-area-height': '80px',
+        
       }
     },
   },

@@ -1,5 +1,5 @@
 import { useSignout } from "@/hooks/useSignout"
-import { isSidebarOpenState, userState } from "@/jotai/jotai-state"
+import { isOpenProfileState, isSidebarOpenState, userState } from "@/jotai/jotai-state"
 import clsx from "clsx"
 import { useAtom } from "jotai"
 import { LogOut, User } from "lucide-react"
@@ -14,6 +14,12 @@ export default function TopNavBar() {
   const [isShowPanel, setIsShowPanel] = useState<boolean>(false)
   const panelRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLDivElement>(null)
+  const [, setIsOpenProfile] = useAtom(isOpenProfileState)
+
+  const onOpenProfile =() => {
+    setIsOpenProfile(true)
+    setIsShowPanel(false)
+  }
 
   const {
     onSignoutHandler
@@ -58,14 +64,14 @@ export default function TopNavBar() {
           <div className="w-8 h-8 border rounded-full flex items-center justify-center mr-2">
             <User />
           </div>
-          <div>{user?.email}</div>
+          <div>{user?.username}</div>
         </div>
         {isShowPanel &&
           <div 
             className="absolute top-15 left-2 p-2 h-fit transition-all duration-300 ease-in-out bg-[#cfcbca] shadow-xl rounded-lg z-50" 
             ref={panelRef}
           >
-            <PanelItem name={t('profile')} ItemIcon={<User />} />
+            <PanelItem name={t('profile')} ItemIcon={<User />} onHandler={onOpenProfile}/>
             <LocaleSwitcher />
             <PanelItem name={t('logout')} ItemIcon={<LogOut />} onHandler={onSignoutHandler}/>
           </div>

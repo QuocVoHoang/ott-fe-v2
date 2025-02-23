@@ -10,6 +10,7 @@ import {
   isBodyLoadingState, 
   isOpenDeleteChatState, 
   isOpenNewChatState, 
+  isOpenProfileState, 
   isPageLoadingState, 
   userState 
 } from "@/jotai/jotai-state"
@@ -19,6 +20,7 @@ import { useEffect } from "react"
 import { API_SERVER } from "@/constants/constants";
 import NewChatModal from "@/components/Modals/NewChatModal"
 import DeleteChatModal from "@/components/Modals/DeleteChatModal"
+import ProfileModal from "@/components/Modals/ProfileModal"
 
 export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const router = useRouter()
@@ -28,6 +30,7 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const [isBodyLoading, setIsBodyLoading] = useAtom(isBodyLoadingState)
   const [isOpenNewChat, ] = useAtom(isOpenNewChatState)
   const [isOpenDeleteChat, ] = useAtom(isOpenDeleteChatState)
+  const [isOpenProfile, ] = useAtom(isOpenProfileState)
   const [isAuthenticated] = useAtom(isAuthenticatedState)
 
   useEffect(() => {
@@ -85,6 +88,11 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
       {isOpenDeleteChat &&
         <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
           <DeleteChatModal />
+        </div>
+      }
+      {isOpenProfile &&
+        <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
+          <ProfileModal />
         </div>
       }
       {isPageLoading &&

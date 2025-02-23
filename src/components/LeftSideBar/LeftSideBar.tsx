@@ -29,10 +29,6 @@ export default function LeftSideBar() {
       className={clsx({'w-sidebar-open': sidebarOpen, 'w-sidebar-close': SidebarClose},
       'h-screen relative transition-all duration-300 ease-in-out bg-sidebarColor flex flex-col')}
     >
-      <div className="h-navbar-height flex items-center justify-center">
-        {sidebarOpen ? 'CHAT APP' : 'C'}
-      </div>
-
       <div 
         className={clsx({'w-sidebar-open': sidebarOpen, 'w-sidebar-close': SidebarClose},
         "w-full h-sidebar-body-height transition-all duration-300 ease-in-out overflow-hidden flex")}

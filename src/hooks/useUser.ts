@@ -36,12 +36,36 @@ export const useUser =() => {
     }
   }
 
+  const onChangeUsername =async(newUsername: string) => {
+    try {
+      const response = await axios.put(`${API_SERVER}/user/update-username/${user?.email}`,{
+        username: newUsername
+      })
+      return response.data
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
+  const onChangeUserAvatar =async(newAvatarUrl: string) => {
+    try {
+      const response = await axios.put(`${API_SERVER}/user/update-avatar/${user?.email}`,{
+        avatar_url: newAvatarUrl
+      })
+      return response.data
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
   return {
     user,
     conversationUsers,
 
     checkExistingUser,
     loadUsersInConversation,
-    getUserById
+    getUserById,
+    onChangeUsername,
+    onChangeUserAvatar
   }
 }

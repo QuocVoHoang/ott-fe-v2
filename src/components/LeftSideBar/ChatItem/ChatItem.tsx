@@ -1,12 +1,12 @@
 'use client'
 
+import Avatar from "@/components/Avatar/Avatar";
 import { IConversation } from "@/constants/interface"
 import { usePathname } from "@/i18n/routing";
 import { currentConversationState, isOpenDeleteChatState } from "@/jotai/jotai-state";
 import clsx from "clsx";
 import { useAtom } from "jotai";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
-import Image from 'next/image';
 import { JSX, useEffect, useRef, useState } from "react";
 
 
@@ -61,14 +61,8 @@ export default function ChatItem({item}: {item: IConversation}){
       onClick={() => setCurrentConversation(item)}
     >
       <div className="flex">
-        <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center" >
-        {item.avatar_url && item.avatar_url.startsWith("http") ? (
-          <Image src={item.avatar_url} alt="" className="w-full h-full" width={40} height={40} />
-        ) : (
-          <div className="font-extrabold text-black text-xl">
-            {item.name.charAt(0)}
-          </div>
-        )}
+        <div className="w-12 h-12" >
+          <Avatar avatar_url={item.avatar_url} name={item.name}/>
         </div>
         <div className="ml-2 flex flex-col">
           <div className="text-lg font-bold">

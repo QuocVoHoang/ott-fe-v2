@@ -1,5 +1,6 @@
 "use client"
 
+import { Search } from "lucide-react"
 import { Dispatch, SetStateAction } from "react"
 
 interface Props {
@@ -12,13 +13,14 @@ export default function SearchComponent({
 }: Props) {
   
   return(
-    <div className="h-search-component-height border-b">
+    <div className="h-search-component-height bg-white flex items-center text-[#7C7C7C] border-none rounded-[15px] px-2 shadow-[0px_4px_5px_2px_rgba(121,197,239,0.38)]">
+      <Search className="w-5"/>
       <input 
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search chat"
-        className="w-full h-full outline-none border p-2"
+        className="max-w-full h-full outline-none p-2 "
       />
     </div>
   )

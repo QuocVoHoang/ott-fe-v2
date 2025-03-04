@@ -9,11 +9,10 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['upload.wikimedia.org'],
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "example.com",
+        protocol: 'https',
+        hostname: '**',
       },
     ],
   },

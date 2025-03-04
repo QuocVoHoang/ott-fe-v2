@@ -1,16 +1,16 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API_SERVER } from "@/constants/constants";
 import { IMessage } from "@/constants/interface";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import { useAtom } from "jotai";
-import { currentMessagesState } from "@/jotai/jotai-state";
 
 
 export const useWebSocket = () => {
-  const [messages, setMessages] = useAtom(currentMessagesState)
+  const [messages, setMessages] = useState<IMessage[]>([])
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const params = useParams();
 
@@ -35,7 +35,7 @@ export const useWebSocket = () => {
     };
 
     ws.onmessage = (event) => {
-      console.log("Receive data:", event.data)
+      console.log("WS Receive data:", event.data)
       const parsedData: IMessage = JSON.parse(event.data)
       if(setMessages) {
         setMessages(prev => [...prev, parsedData])
@@ -61,9 +61,13 @@ export const useWebSocket = () => {
     }
   };
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return {
     messages,
-    
+    messagesEndRef,
     sendMessage
   }
 };

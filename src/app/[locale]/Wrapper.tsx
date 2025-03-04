@@ -2,15 +2,12 @@
 
 import LeftSideBar from "@/components/LeftSideBar/LeftSideBar"
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner"
-import TopNavBar from "@/components/TopNavBar/TopNavBar"
 import { IUser } from "@/constants/interface"
 import { usePathname, useRouter } from "@/i18n/routing"
 import { 
   isAuthenticatedState, 
-  isBodyLoadingState, 
-  isOpenDeleteChatState, 
-  isOpenNewChatState, 
-  isOpenProfileState, 
+  isBodyLoadingState,
+  isOpenModalState,
   isPageLoadingState, 
   userState 
 } from "@/jotai/jotai-state"
@@ -18,9 +15,7 @@ import axios from "axios"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { API_SERVER } from "@/constants/constants";
-import NewChatModal from "@/components/Modals/NewChatModal"
-import DeleteChatModal from "@/components/Modals/DeleteChatModal"
-import ProfileModal from "@/components/Modals/ProfileModal"
+import Modal from "@/components/Modals/Modal"
 
 export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const router = useRouter()
@@ -28,9 +23,7 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const [ , setUser] = useAtom(userState)
   const [isPageLoading, setIsPageLoading] = useAtom(isPageLoadingState)
   const [isBodyLoading, setIsBodyLoading] = useAtom(isBodyLoadingState)
-  const [isOpenNewChat, ] = useAtom(isOpenNewChatState)
-  const [isOpenDeleteChat, ] = useAtom(isOpenDeleteChatState)
-  const [isOpenProfile, ] = useAtom(isOpenProfileState)
+  const [isOpenModal,] = useAtom(isOpenModalState)
   const [isAuthenticated] = useAtom(isAuthenticatedState)
 
   useEffect(() => {
@@ -80,19 +73,9 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
 
   return(
     <>
-      {isOpenNewChat &&
+      {isOpenModal &&
         <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
-          <NewChatModal />
-        </div>
-      }
-      {isOpenDeleteChat &&
-        <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
-          <DeleteChatModal />
-        </div>
-      }
-      {isOpenProfile &&
-        <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
-          <ProfileModal />
+          <Modal />
         </div>
       }
       {isPageLoading &&
@@ -100,18 +83,21 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
         <LoadingSpinner />
       </div>}
       {!isPageLoading && 
-      <div className="w-full h-full flex overflow-hidden">
-        {pathname !== '/signin' && pathname !== '/signup' && <LeftSideBar />}
+      <div className="w-full h-full flex overflow-hidden bg-[#EFF6FC]">
+        {pathname !== '/signin' && pathname !== '/signup' && 
+          <LeftSideBar />
+        }
         <div className="flex flex-col">
-          {pathname !== '/signin' && pathname !== '/signup' && <TopNavBar />}
-            {isBodyLoading && 
-              <div className="w-full h-sidebar-body-height flex items-center justify-center">
-                <LoadingSpinner />
-              </div>
-            }
-            {!isBodyLoading && <div className="w-full h-main-body-height">
+          {isBodyLoading && 
+            <div className="w-full h-sidebar-body-height flex items-center justify-center">
+              <LoadingSpinner />
+            </div>
+          }
+          {!isBodyLoading && 
+            <div className="w-chat-container h-main-body-height my-5 pr-5">
               {children}
-            </div>}
+            </div>
+          }
         </div>
       </div>
       }

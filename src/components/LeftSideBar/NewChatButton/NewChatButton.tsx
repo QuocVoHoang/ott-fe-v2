@@ -1,16 +1,22 @@
 "use client"
 
-import { isOpenNewChatState } from "@/jotai/jotai-state"
+import { ModalType } from "@/constants/enum"
+import { isOpenModalState, modalTypeState } from "@/jotai/jotai-state"
 import { useAtom } from "jotai"
 
 export default function NewChatButton() {
-  const [, setIsOpenNewChat] = useAtom(isOpenNewChatState)
-  return(
+  const [, setIsOpenModal] = useAtom(isOpenModalState)
+  const [, setModalType] = useAtom(modalTypeState)
+
+  return (
     <div 
-      className="w-full h-newchat-button hover:bg-gray-300 cursor-pointer transition-all duration-300 flex items-center justify-center"
-      onClick={() => setIsOpenNewChat(true)}
+      className="w-full h-new-chat-button bg-white rounded-[25px] p-2 shadow-[0px_4px_5px_2px_rgba(121,197,239,0.38)] flex items-center justify-center cursor-pointer hover:bg-slate-100 duration-300 transition-all"
+      onClick={() => {
+        setModalType(ModalType.NEWCHAT)
+        setIsOpenModal(true)
+      }}  
     >
-      new chat
+      + New chat
     </div>
   )
 }

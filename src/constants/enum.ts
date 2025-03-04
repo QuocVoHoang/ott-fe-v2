@@ -1,6 +1,12 @@
 export enum Navigation {
   CHAT = 'chat',
-  CONTACT = 'contact'
+  CONTACT = 'contact',
+  SETTING = 'setting'
+}
+
+export enum ModalType {
+  DELETECHAT = 'delete',
+  NEWCHAT = 'new'
 }
 
 export enum MessageType {

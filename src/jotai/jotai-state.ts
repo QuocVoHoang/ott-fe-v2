@@ -1,4 +1,5 @@
-import { IConversation, IMessage, IUser } from '@/constants/interface';
+import { ModalType, Navigation } from '@/constants/enum';
+import { IUser } from '@/constants/interface';
 import { atom } from 'jotai';
 
 export const isAuthenticatedState = atom<boolean>(false)
@@ -11,12 +12,8 @@ export const isPageLoadingState = atom<boolean>(false)
 
 export const isBodyLoadingState = atom<boolean>(false)
 
-export const isOpenNewChatState = atom<boolean>(false)
+export const isOpenModalState = atom<boolean>(false)
+export const modalTypeState = atom<ModalType>(ModalType.NEWCHAT)
 
-export const isOpenDeleteChatState = atom<boolean>(false)
+export const navigationState = atom<Navigation>(Navigation.CHAT)
 
-export const isOpenProfileState = atom<boolean>(false)
-
-export const currentConversationState = atom<IConversation | null>(null)
-
-export const currentMessagesState = atom<IMessage[]>([])

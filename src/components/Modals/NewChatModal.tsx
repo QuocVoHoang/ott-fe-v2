@@ -1,17 +1,19 @@
 "use client"
 
-import { isOpenNewChatState, userState } from "@/jotai/jotai-state"
+import { isOpenModalState, userState } from "@/jotai/jotai-state"
 import { useAtom } from "jotai"
 import InputField from "../InputField/InputField"
 import { useEffect, useState } from "react"
 import { GroupType } from "@/constants/enum"
 import { Trash, Plus } from "lucide-react"
-import { useConversation } from "@/hooks/useConversation"
-import { useUser } from "@/hooks/useUser"
+import axios from "axios"
+import { API_SERVER } from "@/constants/constants"
+import { useRouter } from "@/i18n/routing"
 
 export default function NewChatModal() {
   const [user , ] = useAtom(userState)
-  const [, setIsOpenNewChat] = useAtom(isOpenNewChatState)
+  const [, setIsOpenModal] = useAtom(isOpenModalState)
+  const router = useRouter()
 
   const [participants, setParticipants] = useState<string[]>([""]);  
   const [groupName, setGroupName] = useState('')
@@ -33,13 +35,35 @@ export default function NewChatModal() {
     setParticipants(newInputs);
   }
 
-  const {
-    checkExistingUser
-  } = useUser()
+  const checkExistingUser = async (participants: string[]) => {
+    const response = await axios.post('/api/users', {
+      participants: participants
+    })
+    return response.data
+  }
 
-  const { 
-    onCreateNewChat
-  } = useConversation()
+  const onCreateNewChat = async(  
+    name: string, 
+    type: string, 
+    participants: string[], 
+    created_by: string
+  ) => {
+    const data = {
+      name: name,
+      type: type,
+      participants: participants,
+      created_by: created_by,
+    };
+    
+    try {   
+      const response = await axios.post(`${API_SERVER}/conversation/`, data)
+      if(response) {
+        router.push(`/chat/${response.data.conversation.id}`)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const onCreateNewGroupChat = async() => {
     if(!participants.includes(`${user?.email}`)) {
@@ -54,7 +78,7 @@ export default function NewChatModal() {
       if(equal) {
         const allParticipants = [...participants, `${user?.email}`]
         onCreateNewChat(groupName, type, allParticipants, `${user?.email}`)
-        setIsOpenNewChat(false)
+        setIsOpenModal(false)
       } else {
         participants.forEach((participant: string) => {
           if(!existingUsers.includes(participant) ) {
@@ -75,7 +99,7 @@ export default function NewChatModal() {
 
   return(
     <div className="w-full h-full flex items-center justify-center text-red-500"
-      onClick={() => setIsOpenNewChat(false)}
+      onClick={() => setIsOpenModal(false)}
     >
       <div className="w-fit h-fit bg-white rounded-lg p-5 flex flex-col"
         onClick={(e) => {e.stopPropagation()}}
@@ -126,7 +150,7 @@ export default function NewChatModal() {
         </button>
 
         <div className="flex justify-end w-full h-fit">
-          <button className="w-[100px] bg-red-300 h-[40px]" onClick={() => setIsOpenNewChat(false)}>cancel</button>
+          <button className="w-[100px] bg-red-300 h-[40px]" onClick={() => setIsOpenModal(false)}>cancel</button>
           <button className="w-[100px] bg-blue-300 h-[40px]"
             onClick={onCreateNewGroupChat}
           >Create</button>

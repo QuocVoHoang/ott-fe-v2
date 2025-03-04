@@ -19,10 +19,10 @@ export default function NavigatorItem({item, sidebarOpen}: Props) {
   useEffect(() => {
     switch(item.name) {
       case Navigation.CHAT:
-        setIcon(<MessageCircle className='w-7 h-7'/>)
+        setIcon(<MessageCircle className='w-7 h-7 text-white'/>)
         break
       case Navigation.CONTACT:
-        setIcon(<BookUser className='w-7 h-7'/>)
+        setIcon(<BookUser className='w-7 h-7 text-white'/>)
         break
       default:
         break
@@ -30,7 +30,7 @@ export default function NavigatorItem({item, sidebarOpen}: Props) {
   }, [item.name])
 
   return(
-    <div className="w-[80%] h-12 mt-2 group flex flex-col items-center justify-center rounded-lg cursor-pointer hover:bg-gray-400 transition-all duration-300">
+    <div className="w-[80%] h-12 mt-2 group flex flex-col items-center justify-center rounded-lg">
       {icon}
       {!sidebarOpen && <Tooltip title={t(item.name)} />}
     </div>

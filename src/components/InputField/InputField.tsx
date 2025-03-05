@@ -8,10 +8,10 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 const InputField: React.FC<Props> = ({ startIcon, endIcon, onShowPassword, ...inputProps }) => {
   return (
-    <div className="relative w-full mt-2">
+    <div className="relative w-full">
       <input
         {...inputProps}
-        className={`w-[376px] h-[44px] pr-4 py-2 rounded-lg border border-solid border-[#DBDBDB] ${startIcon ? 'pl-10' : 'pl-2'}`}
+        className={`w-full h-[44px] pr-4 py-2 rounded-lg border border-solid border-[#DBDBDB] text-black ${startIcon ? 'pl-10' : 'pl-2'}`}
       />
       {startIcon}
       {

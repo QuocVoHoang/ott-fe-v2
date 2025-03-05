@@ -74,7 +74,7 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   return(
     <>
       {isOpenModal &&
-        <div className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 absolute top-0 left-0 z-50 ">
+        <div className="absolute top-0 left-0 z-50 w-screen h-screen flex items-center justify-center bg-black bg-opacity-50">
           <Modal />
         </div>
       }

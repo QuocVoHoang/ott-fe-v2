@@ -32,7 +32,8 @@ export default {
         'nav-sb-open': 'calc(100vw - 540px)',
         'nav-sb-close': 'calc(100vw - 80px)',
 
-        'chat-item': 'calc(100% - 70px)'
+        'chat-item': 'calc(100% - 70px)',
+        'chat-input': 'calc(100% - 150px)'
       },
       height: {
         'navbar-height': '64px',

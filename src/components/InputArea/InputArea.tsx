@@ -34,11 +34,11 @@ export default function InputArea() {
 
   return(
     <div className="w-full h-full p-3 flex">
-      <div className="w-full h-full bg-[#EFF6FC] flex flex-row items-center rounded-full pr-5">
-        <div className="w-[10%] h-full flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
+      <div className="w-full h-full bg-[#EFF6FC] flex flex-row items-center rounded-full">
+        <div className="w-[50px] h-[50px] flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
           <Paperclip className="text-gray-600 "/>
         </div>
-        <div className="w-[80%] h-full flex items-center">
+        <div className="w-chat-input h-full flex items-center">
           <input 
             placeholder="Type to text"
             type="text"
@@ -52,10 +52,10 @@ export default function InputArea() {
             className="w-full h-full px-2 text-black bg-[#EFF6FC] focus:outline-none"
           />
         </div>
-        <div className="w-[5%] h-full flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
+        <div className="w-[50px] h-[50px] flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
           <Laugh className="text-gray-600 "/>
         </div>
-        <div className="w-[5%] h-full flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
+        <div className="w-[50px] h-[50px] flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
           <Camera className="text-gray-600 "/>
         </div>
       </div>

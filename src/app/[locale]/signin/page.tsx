@@ -28,21 +28,25 @@ export default function Page(){
         <span className='font-medium text-[28px]'>{t('title')}</span>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <InputField
-            startIcon={ <Mail className="w-4 h-4 absolute left-3 top-1/3 text-gray-400" /> }
-            placeholder={t('emailAddress')}
-            {...register('email')}
-          />
+          <div className='w-[376px] mt-2'>
+            <InputField
+              startIcon={ <Mail className="w-4 h-4 absolute left-3 top-1/3 text-gray-400" /> }
+              placeholder={t('emailAddress')}
+              {...register('email')}
+            />
+          </div>
           <span className='text-red-700'>{errors.email?.message}</span>
 
-          <InputField
-            startIcon={ <Lock className="w-4 h-4 absolute left-3 top-1/3 text-gray-400" /> }
-            endIcon={ showPassword ? <Eye className='w-4 h-4'/> : <EyeClosed className='w-4 h-4'/>}
-            placeholder={t('password')}
-            {...register('password')}
-            type={showPassword ? "text" : "password"}
-            onShowPassword={onToggleShowPassword}
-          />
+          <div className='w-[376px] mt-2'>
+            <InputField
+              startIcon={ <Lock className="w-4 h-4 absolute left-3 top-1/3 text-gray-400" /> }
+              endIcon={ showPassword ? <Eye className='w-4 h-4'/> : <EyeClosed className='w-4 h-4'/>}
+              placeholder={t('password')}
+              {...register('password')}
+              type={showPassword ? "text" : "password"}
+              onShowPassword={onToggleShowPassword}
+            />
+          </div>
           <span className='text-red-700'>{errors.password?.message}</span>
 
           <button

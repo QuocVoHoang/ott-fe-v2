@@ -69,6 +69,7 @@ export default function UploadAvatar({
         <input
           type="file"
           multiple={false}
+          accept="image/*"
           {...register("file")}
           ref={(e) => {
             register("file").ref(e);
@@ -79,11 +80,11 @@ export default function UploadAvatar({
         />
       </div>
 
-      <div className="w-full h-full rounded-full">
-          <Avatar 
-            avatar_url={fileUrl}
-            name="G"
-          />
+      <div className="w-[50px] h-[50px] rounded-full">
+        <Avatar 
+          avatar_url={fileUrl}
+          name="G"
+        />
       </div>
     </div>
   );

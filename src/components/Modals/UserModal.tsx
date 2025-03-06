@@ -4,16 +4,15 @@ import { isOpenModalState, userState } from "@/jotai/jotai-state"
 import { useAtom } from "jotai"
 import { X } from "lucide-react"
 import InputField from "../InputField/InputField"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import { API_SERVER } from "@/constants/constants"
 import UploadAvatar from "../UploadAvatar/UploadAvatar"
-import { useRouter } from "@/i18n/routing"
+import { IUser } from "@/constants/interface"
 
 export default function UserModal() {
-  const [user,] = useAtom(userState)
+  const [user, setUser] = useAtom(userState)
   const [, setIsOpenModal] = useAtom(isOpenModalState)
-  const router = useRouter()
   const [name, setName] = useState<string>(`${user?.username}` || '')
   const [fileUrl, setFileUrl] = useState<string>(`${user?.avatarUrl}` || '')
   const [oldFileUrl, setOldFileUrl] = useState<string>(`${user?.avatarUrl}` || '')
@@ -62,14 +61,24 @@ export default function UserModal() {
 
       const response = await axios.put(`${API_SERVER}/user/update/${user?.email}`, data)
       if (response) {
-        setIsOpenModal(false)
+        setUser({
+          id: response.data.id,
+          username: response.data.username,
+          avatarUrl: response.data.avatar_url,
+          email: response.data.email
+        } as IUser)
+        console.log('response', response.data)
         onDeleteOldFileUrl()
-        router.push('/')
+        setIsOpenModal(false)
       }
     } catch (error) {
       console.error(error)
     }
   }
+
+  useEffect(() => {
+    console.log('user', user)
+  }, [user])
 
   return (
     <div className="w-full h-full flex items-center justify-center text-red-500"

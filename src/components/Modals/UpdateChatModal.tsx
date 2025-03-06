@@ -1,6 +1,6 @@
 "use client"
 
-import { isOpenModalState, userState } from "@/jotai/jotai-state"
+import { conversationsState, isOpenModalState, userState } from "@/jotai/jotai-state"
 import { useAtom } from "jotai"
 import InputField from "../InputField/InputField"
 import { useEffect, useState } from "react"
@@ -19,6 +19,8 @@ export default function UpdateChatModal() {
 
   const [user,] = useAtom(userState)
   const [, setIsOpenModal] = useAtom(isOpenModalState)
+  const [, setConversations] = useAtom(conversationsState)
+
   const router = useRouter()
 
   const [findingParticipant, setFindingParticipant] = useState<string>('')
@@ -29,6 +31,7 @@ export default function UpdateChatModal() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [fileUrl, setFileUrl] = useState<string>('')
+  const [oldFileUrl, setOldFileUrl] = useState<string>('')
 
   const onChangeFileUrl = (url: string) => {
     setFileUrl(url)
@@ -45,8 +48,7 @@ export default function UpdateChatModal() {
       if (response) {
         setGroupName(response.data.conversation.name)
         setFileUrl(response.data.conversation.avatar_url)
-        setGroupName(response.data.conversation.type)
-
+        setOldFileUrl(response.data.conversation.avatar_url)
         const users: IUser[] = response.data.users
         const emails = users.map(user => user.email);
         setParticipants(emails);
@@ -83,14 +85,35 @@ export default function UpdateChatModal() {
       const data = {
         avatar_url: `${fileUrl}`,
         name: `${groupName}`,
-        participants: filteredParticipants
+        participants: filteredParticipants,
+        email: `${user?.email}`
       }
-      console.log('data', data)
-      console.log('conversationId', conversationId)
+      const response = await axios.put(`${API_SERVER}/conversation/update/${conversationId}`, data)
+      if (response) {
+        setConversations(response.data)
+      }
+      const deleteReponse = await axios.delete(`${API_SERVER}/bucket/delete/${oldFileUrl.split("amazonaws.com/")[1]}`)
+      if (deleteReponse) {
+        setIsOpenModal(false)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const onLeaveGroup =async() => {
+    try {
+      const filteredParticipants = participants.filter(item => item !== '' && item !== `${user?.email}`);
+      const data = {
+        avatar_url: `${fileUrl}`,
+        name: `${groupName}`,
+        participants: filteredParticipants,
+        email: `${user?.email}`
+      }
       const response = await axios.put(`${API_SERVER}/conversation/update/${conversationId}`, data)
       if (response) {
         setIsOpenModal(false)
-        router.push(`/chat/${response.data.conversation.id}`)
+        router.push(`/chat/`)
       }
     } catch (e) {
       console.error(e)
@@ -104,8 +127,7 @@ export default function UpdateChatModal() {
 
   const onCancel = async () => {
     try {
-      if (fileUrl !== '') {
-        console.log(fileUrl.split("amazonaws.com/")[1])
+      if (fileUrl !== `${user?.avatarUrl}`) {
         const response = await axios.delete(`${API_SERVER}/bucket/delete/${fileUrl.split("amazonaws.com/")[1]}`)
         if (response) {
           setIsOpenModal(false)
@@ -252,11 +274,11 @@ export default function UpdateChatModal() {
           })}
 
           <div className="mt-2 w-full flex justify-end"
-            onClick={() => {
-              setParticipants(prev => prev.filter(email => email !== `${user?.email}`))
-            }}
+            onClick={onLeaveGroup}
           >
-            <div className="border border-[#BDBDBD] rounded-lg px-2 w-fit cursor-pointer bg-orange-300 hover:bg-orange-400 transition-all duration-300">
+            <div 
+              className="border border-[#BDBDBD] rounded-lg px-2 w-fit cursor-pointer bg-orange-300 hover:bg-orange-400 transition-all duration-300"
+            >
               Leave group
             </div>
           </div>

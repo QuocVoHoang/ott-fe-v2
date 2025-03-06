@@ -1,15 +1,14 @@
 "use client"
 
 import { API_SERVER } from "@/constants/constants"
-import { IConversation } from "@/constants/interface"
-import { userState } from "@/jotai/jotai-state"
+import { conversationsState, userState } from "@/jotai/jotai-state"
 import axios from "axios"
 import { useAtom } from "jotai"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 export default function useChatList() {
   const [user, ] = useAtom(userState)
-  const [conversations, setConversations] = useState<IConversation[]>([])
+  const [conversations, setConversations] = useAtom(conversationsState)
 
   const loadConversationsOfUser =async() => {
     try {
@@ -28,5 +27,6 @@ export default function useChatList() {
 
   return {
     conversations: conversations,
+    setConversations: setConversations
   }
 }

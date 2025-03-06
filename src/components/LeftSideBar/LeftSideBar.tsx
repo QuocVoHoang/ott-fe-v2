@@ -14,7 +14,6 @@ export default function LeftSideBar() {
   const [sidebarOpen, ] = useAtom(isSidebarOpenState)
   const [query, setQuery] = useState<string>("")
 
-  
   return(
     <div 
       className={clsx({'w-sidebar-open-with-padding': sidebarOpen, 'w-sidebar-close-with-padding': SidebarClose},

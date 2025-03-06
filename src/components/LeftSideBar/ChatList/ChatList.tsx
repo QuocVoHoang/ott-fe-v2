@@ -10,7 +10,7 @@ import { IConversation } from "@/constants/interface"
 
 export default function ChatList() {
   const {
-    conversations
+    conversations,
   } = useChatList()
 
   return (

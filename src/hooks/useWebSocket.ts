@@ -7,36 +7,34 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 
 export const useWebSocket = () => {
-  const [messages, setMessages] = useState<IMessage[]>([])
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const params = useParams();
 
-  const loadMessagesInConversation =async() => {
+  const loadMessagesInConversation = async () => {
     try {
-      const response = await axios.get(`${API_SERVER}/message/${params.id}`)
-      if(setMessages) {
-        setMessages(response.data)
-      }
-    } catch(e) {
-      console.error(e)
+      const response = await axios.get(`${API_SERVER}/message/${params.id}`);
+      setMessages(response.data);
+    } catch (e) {
+      console.error(e);
     }
-  }
+  };
 
-  const deleteMessage =async(messageId: string) => {
-    try {
-      const response = await axios.delete(`${API_SERVER}/message/${messageId}`)
-      if(response) {
-        setMessages(messages.filter(message => message.id !== messageId))
-      }
-    } catch(e) {
-      console.error(e)
+  const deleteMessage = async (messageId: string) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const deleteRequest = {
+        action: "delete",
+        message_id: messageId,
+      };
+      socket.send(JSON.stringify(deleteRequest));
+    } else {
+      console.error("WebSocket is not open");
     }
-  }
+  };
 
   useEffect(() => {
-    loadMessagesInConversation()
+    loadMessagesInConversation();
     const ws = new WebSocket(`${API_SERVER}/message/ws`);
     
     ws.onopen = () => {
@@ -44,11 +42,14 @@ export const useWebSocket = () => {
     };
 
     ws.onmessage = (event) => {
-      console.log("WS Receive data:", event.data)
-      const parsedData: IMessage = JSON.parse(event.data)
-      if(setMessages) {
-        setMessages(prev => [...prev, parsedData])
-      };
+      console.log("WS Receive data:", event.data);
+      const parsedData = JSON.parse(event.data);
+
+      if (parsedData.action === "send") {
+        setMessages((prev) => [...prev, parsedData]);
+      } else if (parsedData.action === "delete") {
+        setMessages((prev) => prev.filter((msg) => msg.id !== parsedData.message_id));
+      }
     };
 
     ws.onclose = () => {
@@ -61,10 +62,11 @@ export const useWebSocket = () => {
       ws.close();
     };
   }, []);
-  
+
   const sendMessage = (newMessage: IMessage) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify(newMessage));
+      const messageWithAction = { ...newMessage, action: "send" };
+      socket.send(JSON.stringify(messageWithAction));
     } else {
       console.error("WebSocket is not open");
     }
@@ -79,5 +81,5 @@ export const useWebSocket = () => {
     messagesEndRef,
     sendMessage,
     deleteMessage,
-  }
+  };
 };

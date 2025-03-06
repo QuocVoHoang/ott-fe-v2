@@ -78,7 +78,7 @@ export default function MessageItem({
   return (
     <div className={`w-full h-fit flex mt-1`}>
       {!isUser &&
-        <div className={`w-10 h-10 rounded-full group cursor-pointer relative ${isUser ? 'ml-3' : 'mr-3'} ${showAvatar ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`w-[50px] h-[50px] rounded-full group cursor-pointer relative ${isUser ? 'ml-3' : 'mr-3'} ${showAvatar ? 'opacity-100' : 'opacity-0'}`}>
           <Avatar avatar_url={`${sender?.avatarUrl}`} name={`${sender?.username}`} />
         </div>
       }
@@ -102,15 +102,15 @@ export default function MessageItem({
           </div>
         }
 
-        <div className="flex items-center">
+        {isUser && <div className="flex items-center">
           <div
             className={`h-[50px] hover:bg-slate-200 rounded-lg cursor-pointer flex items-center transition-all duration-300 relative`}
             onClick={() => setShowPanel(prev => !prev)}
             ref={buttonRef}
           >
-            <EllipsisVertical />
+            <EllipsisVertical className="h-[15px]" />
           </div>
-        </div>
+        </div>}
 
         {showPanel &&
           <div className="flex items-center">

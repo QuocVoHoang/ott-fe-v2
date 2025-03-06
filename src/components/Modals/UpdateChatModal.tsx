@@ -4,7 +4,6 @@ import { isOpenModalState, userState } from "@/jotai/jotai-state"
 import { useAtom } from "jotai"
 import InputField from "../InputField/InputField"
 import { useEffect, useState } from "react"
-import { GroupType } from "@/constants/enum"
 import { Plus, X } from "lucide-react"
 import axios from "axios"
 import { API_SERVER } from "@/constants/constants"
@@ -13,16 +12,20 @@ import Avatar from "../Avatar/Avatar"
 import { IUser } from "@/constants/interface"
 import CircularProgress from "../CircularProgress/CircularProgress"
 import UploadAvatar from "../UploadAvatar/UploadAvatar"
+import { useParams } from "next/navigation"
 
-export default function NewChatModal() {
+export default function UpdateChatModal() {
+  const { id: conversationId } = useParams()
+
   const [user,] = useAtom(userState)
   const [, setIsOpenModal] = useAtom(isOpenModalState)
   const router = useRouter()
+
   const [findingParticipant, setFindingParticipant] = useState<string>('')
   const [foundParticipant, setFoundParticipant] = useState<IUser>()
   const [participants, setParticipants] = useState<string[]>([""])
+
   const [groupName, setGroupName] = useState('')
-  const [type, setType] = useState<GroupType>(GroupType.PRIVATE)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [fileUrl, setFileUrl] = useState<string>('')
@@ -35,6 +38,23 @@ export default function NewChatModal() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+  const getConversationById = async () => {
+    try {
+      const response = await axios.get(`${API_SERVER}/conversation/${conversationId}`)
+      if (response) {
+        setGroupName(response.data.conversation.name)
+        setFileUrl(response.data.conversation.avatar_url)
+        setGroupName(response.data.conversation.type)
+
+        const users: IUser[] = response.data.users
+        const emails = users.map(user => user.email);
+        setParticipants(emails);
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const getUserByEmail = async () => {
     try {
@@ -56,20 +76,18 @@ export default function NewChatModal() {
     }
   }
 
-  const onCreateNewChat = async (
+  const onUpdate = async (
   ) => {
     try {
       const filteredParticipants = participants.filter(item => item !== '')
-      const inputParticipants = [...filteredParticipants, user?.email]
-
       const data = {
-        name: groupName,
-        type: type,
-        avatar_url: fileUrl,
-        participants: inputParticipants,
-        created_by: `${user?.email}`,
-      };
-      const response = await axios.post(`${API_SERVER}/conversation/`, data)
+        avatar_url: `${fileUrl}`,
+        name: `${groupName}`,
+        participants: filteredParticipants
+      }
+      console.log('data', data)
+      console.log('conversationId', conversationId)
+      const response = await axios.put(`${API_SERVER}/conversation/update/${conversationId}`, data)
       if (response) {
         setIsOpenModal(false)
         router.push(`/chat/${response.data.conversation.id}`)
@@ -84,29 +102,25 @@ export default function NewChatModal() {
     setFoundParticipant(undefined)
   }
 
-  const onCancelCreateNewChat =async() => {
+  const onCancel = async () => {
     try {
-      if(fileUrl !== '') {
+      if (fileUrl !== '') {
         console.log(fileUrl.split("amazonaws.com/")[1])
         const response = await axios.delete(`${API_SERVER}/bucket/delete/${fileUrl.split("amazonaws.com/")[1]}`)
-        if(response) {
+        if (response) {
           setIsOpenModal(false)
         }
       } else {
         setIsOpenModal(false)
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }
 
   useEffect(() => {
-    if (participants.length > 1) {
-      setType(GroupType.GROUP)
-    } else {
-      setType(GroupType.PRIVATE)
-    }
-  }, [participants])
+    getConversationById()
+  }, [conversationId])
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -140,17 +154,17 @@ export default function NewChatModal() {
 
   return (
     <div className="w-full h-full flex items-center justify-center text-red-500"
-      onClick={onCancelCreateNewChat}
+      onClick={onCancel}
     >
       <div className="w-[500px] h-fit bg-white rounded-lg p-5 flex flex-col"
         onClick={(e) => { e.stopPropagation() }}
       >
         <div className="flex justify-between border-b pb-2">
-          <div className="font-bold text-black" >Creat Group</div>
+          <div className="font-bold text-black" >Update Group</div>
           <div
             className="font-normal text-[#303030] cursor-pointer hover:bg-slate-300 rounded-full"
-            onClick={onCancelCreateNewChat}
-          > <X /></div>
+            onClick={onCancel}
+          > <X /> </div>
         </div>
 
         <div className="w-full h-[80px] mt-2 flex items-center justify-between">
@@ -216,23 +230,48 @@ export default function NewChatModal() {
         }
 
         <div className="text-black mt-2">
-          {participants.map((participant, index) => (
-            <div key={index}>
-              {participant}
+          {participants.map((participant, index) => {
+            return (
+              <div key={index}>
+                {participant !== user?.email &&
+                  <div className="flex w-[50%] pt-2 pr-5 justify-between items-center">
+                    <div>
+                      {participant}
+                    </div>
+                    <div className="cursor-pointer hover:bg-slate-300 rounded-full transition-all duration-300"
+                      onClick={() => {
+                        setParticipants(prev => prev.filter(email => email !== participant))
+                      }}
+                    >
+                      <X />
+                    </div>
+                  </div>
+                }
+              </div>
+            )
+          })}
+
+          <div className="mt-2 w-full flex justify-end"
+            onClick={() => {
+              setParticipants(prev => prev.filter(email => email !== `${user?.email}`))
+            }}
+          >
+            <div className="border border-[#BDBDBD] rounded-lg px-2 w-fit cursor-pointer bg-orange-300 hover:bg-orange-400 transition-all duration-300">
+              Leave group
             </div>
-          ))}
+          </div>
         </div>
 
-        <div className="flex justify-end w-full h-fit ">
+        <div className="flex justify-end w-full h-fit mt-2">
           <button
             className="w-[100px] h-[40px] border border-[#BDBDBD] rounded-lg text-[#303030] hover:bg-slate-200 transition-all duration-300"
-            onClick={onCancelCreateNewChat}
+            onClick={onCancel}
           >
             cancel
           </button>
           <button className="w-[100px] h-[40px] bg-green-400 rounded-lg ml-2 text-white hover:bg-green-500 transition-all duration-300"
-            onClick={onCreateNewChat}
-          >Create</button>
+            onClick={onUpdate}
+          >Update</button>
         </div>
 
       </div>

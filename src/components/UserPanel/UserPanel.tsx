@@ -7,7 +7,7 @@ export default function UserPanel() {
   const [user, ] = useAtom(userState)
   return (
     <div
-      className="bg-white w-fit h-fit rounded-lg border border-[#DBDBDB] flex flex-col px-3"
+      className="bg-white w-fit h-fit rounded-lg border border-[#DBDBDB] flex flex-col px-3 z-50"
     >
       <div className="py-2 text-black font-bold text-xl">
         {user?.username}

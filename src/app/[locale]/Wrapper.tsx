@@ -9,6 +9,7 @@ import {
   isBodyLoadingState,
   isOpenModalState,
   isPageLoadingState, 
+  snackbarState, 
   userState 
 } from "@/jotai/jotai-state"
 import axios from "axios"
@@ -16,6 +17,7 @@ import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { API_SERVER } from "@/constants/constants";
 import Modal from "@/components/Modals/Modal"
+import Snackbar from "@/components/Snackbar/Snackbar"
 
 export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const router = useRouter()
@@ -25,6 +27,7 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const [isBodyLoading, setIsBodyLoading] = useAtom(isBodyLoadingState)
   const [isOpenModal,] = useAtom(isOpenModalState)
   const [isAuthenticated] = useAtom(isAuthenticatedState)
+  const [showSnackbar, ] = useAtom(snackbarState) 
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -83,7 +86,10 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
         <LoadingSpinner />
       </div>}
       {!isPageLoading && 
-      <div className="w-full h-full flex overflow-hidden bg-[#EFF6FC]">
+      <div className="w-full h-full flex overflow-hidden bg-[#EFF6FC] relative">
+        {showSnackbar &&
+          <Snackbar />
+        }
         {pathname !== '/signin' && pathname !== '/signup' && 
           <LeftSideBar />
         }

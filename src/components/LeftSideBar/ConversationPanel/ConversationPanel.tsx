@@ -10,7 +10,12 @@ export default function ConversationPanel() {
 
   return(
     <div className="w-[100px] h-fit bg-white border border-[#BDBDBD] rounded-lg">
-      <div className="w-full h-fit p-1 flex justify-center items-center hover:bg-slate-100 rounded-lg cursor-pointer">
+      <div className="w-full h-fit p-1 flex justify-center items-center hover:bg-slate-100 rounded-lg cursor-pointer"
+        onClick={() => {
+          setModalType(ModalType.UPDATECHAT)
+          setIsOpenModal(true)
+        }}
+      >
         Edit chat
       </div>
       <div className="w-full h-fit p-1 pt-0 flex justify-center items-center hover:bg-slate-100 rounded-lg cursor-pointer"

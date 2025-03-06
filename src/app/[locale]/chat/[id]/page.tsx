@@ -3,7 +3,6 @@
 import ConversationBar from "@/components/ConversationBar/ConversationBar"
 import InputArea from "@/components/InputArea/InputArea"
 import MessageArea from "@/components/MessageArea/MessageArea"
-// import MessageArea from "@/components/MessageArea/MessageArea"
 import { useParams } from "next/navigation"
 
 export default function Page() {

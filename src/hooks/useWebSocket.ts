@@ -6,7 +6,6 @@ import { IMessage } from "@/constants/interface";
 import axios from "axios";
 import { useParams } from "next/navigation";
 
-
 export const useWebSocket = () => {
   const [messages, setMessages] = useState<IMessage[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -25,9 +24,19 @@ export const useWebSocket = () => {
     }
   }
 
+  const deleteMessage =async(messageId: string) => {
+    try {
+      const response = await axios.delete(`${API_SERVER}/message/${messageId}`)
+      if(response) {
+        setMessages(messages.filter(message => message.id !== messageId))
+      }
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
   useEffect(() => {
     loadMessagesInConversation()
-
     const ws = new WebSocket(`${API_SERVER}/message/ws`);
     
     ws.onopen = () => {
@@ -68,6 +77,7 @@ export const useWebSocket = () => {
   return {
     messages,
     messagesEndRef,
-    sendMessage
+    sendMessage,
+    deleteMessage,
   }
 };

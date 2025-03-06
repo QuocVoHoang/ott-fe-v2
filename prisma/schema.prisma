@@ -17,7 +17,7 @@ model conversation_participants {
 
 model conversations {
   id                        String                      @id @db.VarChar(36)
-  name                      String                      @unique @db.VarChar
+  name                      String                      @db.VarChar
   type                      conversation_type
   avatar_url                String?                     @db.VarChar
   created_by                String                      @db.VarChar(36)

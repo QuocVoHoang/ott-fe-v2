@@ -4,8 +4,9 @@ import axios from "axios"
 import Avatar from "../Avatar/Avatar"
 import { API_SERVER } from "@/constants/constants"
 import { useEffect, useState } from "react"
-import { IConversation } from "@/constants/interface"
+import { IConversation, IUser } from "@/constants/interface"
 import { Phone, Video } from "lucide-react"
+import { GroupType } from "@/constants/enum"
 
 interface Props {
   conversationId: string | string[] | undefined
@@ -15,10 +16,20 @@ export default function ConversationBar({
   conversationId
 }: Props) {
   const [currentConversation, setCurrentConversation] = useState<IConversation>()
+  const [allUsers, setAllUsers] = useState<IUser[]>([])
   const getConversationById =async() => {
     try {
       const response = await axios.get(`${API_SERVER}/conversation/${conversationId}`)
-      setCurrentConversation(response.data)
+      setCurrentConversation(response.data.conversation)
+    } catch(e) {
+      console.error(e)
+    }
+  }
+  
+  const getAllUsersInConversation =async() => {
+    try {
+      const response = await axios.get(`${API_SERVER}/conversation/users/${conversationId}`)
+      setAllUsers(response.data)
     } catch(e) {
       console.error(e)
     }
@@ -27,6 +38,7 @@ export default function ConversationBar({
   useEffect(() => {
     if(conversationId) {
       getConversationById()
+      getAllUsersInConversation()
     }
   }, [conversationId])
 
@@ -40,11 +52,12 @@ export default function ConversationBar({
               avatar_url={`${currentConversation?.avatar_url}`}
             />
           </div>
-          <div className="w-fit h-full flex flex-col"> 
-            <div>
+          <div className="w-fit h-full flex flex-col ml-3"> 
+            <div className="font-bold text-xl">
               {currentConversation?.name}
             </div>
             <div>
+              {currentConversation?.type === GroupType.GROUP && `${allUsers.length} members`}
             </div>
           </div>
         </div>

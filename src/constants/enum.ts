@@ -6,7 +6,10 @@ export enum Navigation {
 
 export enum ModalType {
   DELETECHAT = 'delete',
-  NEWCHAT = 'new'
+  NEWCHAT = 'new',
+  UPDATECHAT = 'update',
+  UPFILE = 'upfile',
+  USER = 'user'
 }
 
 export enum MessageType {

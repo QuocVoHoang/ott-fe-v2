@@ -146,11 +146,13 @@ export default function NewChatModal() {
         onClick={(e) => { e.stopPropagation() }}
       >
         <div className="flex justify-between border-b pb-2">
-          <div className="font-bold text-black" >Creat Group</div>
+          <div className="font-bold text-black" >Create Group</div>
           <div
             className="font-normal text-[#303030] cursor-pointer hover:bg-slate-300 rounded-full"
             onClick={onCancelCreateNewChat}
-          > <X /></div>
+          > 
+            <X />
+          </div>
         </div>
 
         <div className="w-full h-[80px] mt-2 flex items-center justify-between">

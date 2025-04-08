@@ -42,16 +42,29 @@ model messages {
 }
 
 model users {
-  id                        String                      @id @db.VarChar(36)
-  username                  String                      @db.VarChar
-  email                     String                      @unique @db.VarChar
-  password                  String                      @db.VarChar
-  avatar_url                String?                     @db.VarChar
-  created_at                DateTime?                   @db.Timestamp(6)
-  updated_at                DateTime?                   @db.Timestamp(6)
-  conversation_participants conversation_participants[]
-  conversations             conversations[]
-  messages                  messages[]
+  id                                          String                      @id @db.VarChar(36)
+  username                                    String                      @db.VarChar
+  email                                       String                      @unique @db.VarChar
+  password                                    String                      @db.VarChar
+  avatar_url                                  String?                     @db.VarChar
+  created_at                                  DateTime?                   @db.Timestamp(6)
+  updated_at                                  DateTime?                   @db.Timestamp(6)
+  conversation_participants                   conversation_participants[]
+  conversations                               conversations[]
+  friendships_friendships_receiver_idTousers  friendships[]               @relation("friendships_receiver_idTousers")
+  friendships_friendships_requester_idTousers friendships[]               @relation("friendships_requester_idTousers")
+  messages                                    messages[]
+}
+
+model friendships {
+  id                                    String            @id @db.VarChar(36)
+  requester_id                          String            @db.VarChar(36)
+  receiver_id                           String            @db.VarChar(36)
+  status                                friendship_status
+  created_at                            DateTime?         @db.Timestamp(6)
+  updated_at                            DateTime?         @db.Timestamp(6)
+  users_friendships_receiver_idTousers  users             @relation("friendships_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_friendships_requester_idTousers users             @relation("friendships_requester_idTousers", fields: [requester_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum conversation_type {
@@ -65,4 +78,9 @@ enum message_type {
   file
   audio
   video
+}
+
+enum friendship_status {
+  PENDING
+  ACCEPTED
 }

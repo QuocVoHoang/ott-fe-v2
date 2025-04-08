@@ -7,6 +7,7 @@ import NewChatModal from "./NewChatModal"
 import DeleteChatModal from "./DeleteChatModal"
 import UserModal from "./UserModal"
 import UpdateChatModal from "./UpdateChatModal"
+import NewFriendModal from "./NewFriendModal"
 
 export default function Modal(){
   const [modalType, ] = useAtom(modalTypeState)
@@ -16,6 +17,7 @@ export default function Modal(){
       {modalType === ModalType.DELETECHAT && <DeleteChatModal />}
       {modalType === ModalType.UPDATECHAT && <UpdateChatModal />}
       {modalType === ModalType.USER && <UserModal />}
+      {modalType === ModalType.NEWFRIEND && <NewFriendModal />}
     </div>
   )
 }

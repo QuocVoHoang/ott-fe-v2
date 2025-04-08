@@ -11,10 +11,11 @@ export const useWebSocket = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const params = useParams();
+  const conversationId = params.id;
 
   const loadMessagesInConversation = async () => {
     try {
-      const response = await axios.get(`${API_SERVER}/message/${params.id}`);
+      const response = await axios.get(`${API_SERVER}/message/${conversationId}`);
       setMessages(response.data);
     } catch (e) {
       console.error(e);
@@ -29,20 +30,20 @@ export const useWebSocket = () => {
       };
       socket.send(JSON.stringify(deleteRequest));
     } else {
-      console.error("WebSocket is not open");
+      console.error("WebSocket chưa mở");
     }
   };
 
   useEffect(() => {
     loadMessagesInConversation();
-    const ws = new WebSocket(`${API_SERVER}/message/ws`);
+    const ws = new WebSocket(`${API_SERVER}/message/ws?conversation_id=${conversationId}`);
     
     ws.onopen = () => {
-      console.log("OPEN WEBSOCKET CONNECTION!");
+      console.log("MỞ KẾT NỐI WEBSOCKET!", conversationId);
     };
 
     ws.onmessage = (event) => {
-      console.log("WS Receive data:", event.data);
+      console.log("WS Nhận dữ liệu:", event.data);
       const parsedData = JSON.parse(event.data);
 
       if (parsedData.action === "send") {
@@ -53,7 +54,7 @@ export const useWebSocket = () => {
     };
 
     ws.onclose = () => {
-      console.log("CLOSE WEBSOCKET CONNECTION!");
+      console.log("ĐÓNG KẾT NỐI WEBSOCKET!");
     };
 
     setSocket(ws);
@@ -61,14 +62,14 @@ export const useWebSocket = () => {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [conversationId]);
 
   const sendMessage = (newMessage: IMessage) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       const messageWithAction = { ...newMessage, action: "send" };
       socket.send(JSON.stringify(messageWithAction));
     } else {
-      console.error("WebSocket is not open");
+      console.error("WebSocket chưa mở");
     }
   };
 

@@ -1,4 +1,4 @@
-import { GroupType, MessageType, Navigation } from "./enum";
+import { FriendshipStatus, GroupType, MessageType, Navigation } from "./enum";
 
 export interface IUser {
   id: string;
@@ -36,4 +36,18 @@ export interface IConversation {
   created_by: string,
   created_at: string,
   updated_at: string,
+}
+
+export interface IFriendShip {
+  id?: string
+  requester_id: string
+  receiver_id: string
+  status: FriendshipStatus
+  created_at?: string,
+  updated_at?: string,
+}
+
+export interface IFriend extends IFriendShip {
+  receiver: IUser
+  requester: IUser
 }

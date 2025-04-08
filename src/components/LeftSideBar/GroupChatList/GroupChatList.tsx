@@ -8,13 +8,14 @@ import { useEffect, useRef, useState } from "react"
 import ConversationPanel from "../ConversationPanel/ConversationPanel"
 import { IConversation } from "@/constants/interface"
 
-export default function ChatList() {
+export default function GroupChatList() {
   const {
     conversations,
   } = useChatList()
 
   return (
     <div className="w-full h-full bg-white rounded-[25px] p-2 shadow-[0px_4px_5px_2px_rgba(121,197,239,0.38)] relative">
+      <div className="font-bold">Groups</div>
       {conversations.length > 0 && conversations.map((conversation, index) => (
         <ChatItem
           key={index}

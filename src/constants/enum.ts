@@ -9,7 +9,8 @@ export enum ModalType {
   NEWCHAT = 'new',
   UPDATECHAT = 'update',
   UPFILE = 'upfile',
-  USER = 'user'
+  USER = 'user',
+  NEWFRIEND = 'new_friend'
 }
 
 export enum MessageType {
@@ -23,4 +24,9 @@ export enum MessageType {
 export enum GroupType {
   PRIVATE = 'private',
   GROUP = 'group'
+}
+
+export enum FriendshipStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED"
 }

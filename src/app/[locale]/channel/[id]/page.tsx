@@ -179,7 +179,7 @@ export default function Page() {
         <div className="w-80 h-60 bg-black">
           <div ref={localVideoRef} className="w-full h-full"></div>
         </div>
-        {remoteUsers.map((user) => (
+        {remoteUsers.map((user) => (  
           <div key={user.uid} className="w-80 h-60 bg-black">
             <div id={`remote-${user.uid}`} className="w-full h-full"></div>
           </div>

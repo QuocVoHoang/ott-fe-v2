@@ -33,25 +33,22 @@ export default {
         'nav-sb-close': 'calc(100vw - 80px)',
 
         'chat-item': 'calc(100% - 70px)',
-        'chat-input': 'calc(100% - 150px)'
+        'chat-input': 'calc(100% - 100px)'
       },
       height: {
         'navbar-height': '64px',
         'main-body-height': '100%',
-
         'search-component-height': '50px',
         'group-people-height': 'calc(100% - 120px)',
         'new-chat-button': '45px',
         'group-height': '48%',
         'people-height': '48%',
-        
-
         'sidebar-body-height': '100%',
         'chatlist-height': 'calc(100% - 100px)',
         'chatbar': '60px',
         'message-area-height': 'calc(100vh - 180px)',
         'input-area-height': '80px',
-        
+        'friend-height': 'calc(100vh - 110px)'
       }
     },
   },

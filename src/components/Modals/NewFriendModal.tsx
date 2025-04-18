@@ -23,9 +23,11 @@ export default function NewFriendModal() {
     setShowLeftSnackbar
   } = useSnackbar()
 
-  const isValidEmail = (email: string): boolean => {
+  const isValidContact = (input: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    const phoneRegex = /^\+84\d{9}$/; // +84 và theo sau là đúng 9 chữ số
+  
+    return emailRegex.test(input) || phoneRegex.test(input);
   };
 
   const getUserByEmail = async () => {
@@ -54,8 +56,6 @@ export default function NewFriendModal() {
     try {
       const token = localStorage.getItem('token')
 
-      console.log('findingFriend', findingFriend?.id)
-
       const response = await axios.post(`${API_SERVER}/friend/request/`, {
         receiver_id: findingFriend?.id
       }, {
@@ -63,7 +63,7 @@ export default function NewFriendModal() {
       })
 
       if(response) {
-        setShowLeftSnackbar(true, "#5afa82", "Friend added!")
+        setShowLeftSnackbar(true, "#5afa82", "Sent friend request!")
         setFindingText('')
       }
     } catch (e) {
@@ -83,7 +83,7 @@ export default function NewFriendModal() {
     } else {
       if (findingText.length > 0) {
         timeoutId = setTimeout(async () => {
-          if (isValidEmail(findingText)) {
+          if (isValidContact(findingText)) {
             const result = await getUserByEmail();
             if (result) {
               setFindingFriend(result);
@@ -104,10 +104,6 @@ export default function NewFriendModal() {
       };
     }
   }, [findingText]);
-
-  useEffect(() => {
-    console.log('findingFriend', findingFriend)
-  }, [findingFriend])
 
   return (
     <div className="w-full h-full flex items-center justify-center text-red-500"

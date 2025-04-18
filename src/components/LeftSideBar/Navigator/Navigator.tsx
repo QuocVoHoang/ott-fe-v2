@@ -9,6 +9,7 @@ import { isOpenModalState, modalTypeState, navigationState, userState } from "@/
 import { useAtom } from "jotai"
 import clsx from "clsx"
 import { ModalType } from "@/constants/enum"
+import { useRouter } from "@/i18n/routing"
 
 interface Props {
   item: ISidebarMenu
@@ -23,6 +24,7 @@ export default function Navigator({item, sidebarOpen}:Props) {
   const [navigation, setNavigation] = useAtom(navigationState)
   const [, setIsOpenModal] = useAtom(isOpenModalState)
   const [, setModalType] = useAtom(modalTypeState)
+  const router = useRouter()
 
   return(
     <div className="w-sidebar-close-no-padding h-full bg-[#6E00FF] rounded-[25px] flex flex-col justify-between items-center">
@@ -46,6 +48,7 @@ export default function Navigator({item, sidebarOpen}:Props) {
               )}
               onClick={() => {
                 setNavigation(item.name)
+                router.push(`/${item.url}`)
               }}
             >
               <NavigatorItem item={item} sidebarOpen={sidebarOpen} />

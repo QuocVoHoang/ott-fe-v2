@@ -22,7 +22,6 @@ export default function NewChatModal() {
   const [foundParticipant, setFoundParticipant] = useState<IUser>()
   const [participants, setParticipants] = useState<string[]>([""])
   const [groupName, setGroupName] = useState('')
-  const [type, setType] = useState<GroupType>(GroupType.PRIVATE)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const [fileUrl, setFileUrl] = useState<string>('')
@@ -64,7 +63,7 @@ export default function NewChatModal() {
 
       const data = {
         name: groupName,
-        type: type,
+        type: GroupType.GROUP,
         avatar_url: fileUrl,
         participants: inputParticipants,
         created_by: `${user?.email}`,
@@ -87,7 +86,6 @@ export default function NewChatModal() {
   const onCancelCreateNewChat =async() => {
     try {
       if(fileUrl !== '') {
-        console.log(fileUrl.split("amazonaws.com/")[1])
         const response = await axios.delete(`${API_SERVER}/bucket/delete/${fileUrl.split("amazonaws.com/")[1]}`)
         if(response) {
           setIsOpenModal(false)
@@ -99,14 +97,6 @@ export default function NewChatModal() {
       console.error(e)
     }
   }
-
-  useEffect(() => {
-    if (participants.length > 1) {
-      setType(GroupType.GROUP)
-    } else {
-      setType(GroupType.PRIVATE)
-    }
-  }, [participants])
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;

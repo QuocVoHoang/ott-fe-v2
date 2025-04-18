@@ -5,6 +5,7 @@ export interface IUser {
   username: string;
   email: string;
   avatarUrl: string;
+  avatar_url?: string;
 }
 
 export interface ISidebarItem {
@@ -32,6 +33,7 @@ export interface IConversation {
   id: string,
   name: string,
   type: GroupType,
+  last_message_id?: string,
   avatar_url: string,
   created_by: string,
   created_at: string,

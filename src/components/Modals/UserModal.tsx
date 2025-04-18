@@ -4,7 +4,7 @@ import { isOpenModalState, userState } from "@/jotai/jotai-state"
 import { useAtom } from "jotai"
 import { X } from "lucide-react"
 import InputField from "../InputField/InputField"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import axios from "axios"
 import { API_SERVER } from "@/constants/constants"
 import UploadAvatar from "../UploadAvatar/UploadAvatar"
@@ -67,7 +67,6 @@ export default function UserModal() {
           avatarUrl: response.data.avatar_url,
           email: response.data.email
         } as IUser)
-        console.log('response', response.data)
         onDeleteOldFileUrl()
         setIsOpenModal(false)
       }
@@ -75,10 +74,6 @@ export default function UserModal() {
       console.error(error)
     }
   }
-
-  useEffect(() => {
-    console.log('user', user)
-  }, [user])
 
   return (
     <div className="w-full h-full flex items-center justify-center text-red-500"

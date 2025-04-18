@@ -1,14 +1,17 @@
 "use client"
 
 import { API_SERVER } from "@/constants/constants"
+import { GroupType } from "@/constants/enum"
+import { IConversation } from "@/constants/interface"
 import { conversationsState, userState } from "@/jotai/jotai-state"
 import axios from "axios"
 import { useAtom } from "jotai"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function useChatList() {
   const [user, ] = useAtom(userState)
   const [conversations, setConversations] = useAtom(conversationsState)
+  const [cons, setCons] = useState<IConversation[]>([])
 
   const loadConversationsOfUser =async() => {
     try {
@@ -25,8 +28,16 @@ export default function useChatList() {
     loadConversationsOfUser()
   }, [user])
 
+  useEffect(() => {
+    if (conversations && conversations.length > 0) {
+      const filtered = conversations.filter(c => c.type === GroupType.GROUP);
+      console.log(filtered)
+      setCons(filtered);
+    }
+  }, [conversations])
+
   return {
-    conversations: conversations,
+    conversations: cons!,
     setConversations: setConversations
   }
 }

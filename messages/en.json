@@ -6,7 +6,8 @@
     "signinButton": "Sign in",
     "or": "or",
     "subtitle": "Don't have an account?",
-    "signupButton": "Sign up"
+    "signupButton": "Sign up",
+    "sendOtpButton": "Send OTP"
   },
   "SignupPage": {
     "title": "Create an account",
@@ -14,6 +15,7 @@
     "password": "Password",
     "confirmPassword": "Confirm password",
     "signupButton": "Sign up",
+    "sendOtpButton": "Send OTP",
     "or": "or", 
     "subtitle": "Already have an account?",
     "signinButton": "Sign in"

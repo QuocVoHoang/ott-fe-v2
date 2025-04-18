@@ -9,10 +9,11 @@ import axios from "axios"
 import { API_SERVER } from "@/constants/constants"
 import { useRouter } from "@/i18n/routing"
 import Avatar from "../Avatar/Avatar"
-import { IUser } from "@/constants/interface"
+import { IConversation, IUser } from "@/constants/interface"
 import CircularProgress from "../CircularProgress/CircularProgress"
 import UploadAvatar from "../UploadAvatar/UploadAvatar"
 import { useParams } from "next/navigation"
+import { GroupType } from "@/constants/enum"
 
 export default function UpdateChatModal() {
   const { id: conversationId } = useParams()
@@ -20,6 +21,7 @@ export default function UpdateChatModal() {
   const [user,] = useAtom(userState)
   const [, setIsOpenModal] = useAtom(isOpenModalState)
   const [, setConversations] = useAtom(conversationsState)
+  const [con, setCon] = useState<IConversation>()
 
   const router = useRouter()
 
@@ -46,6 +48,7 @@ export default function UpdateChatModal() {
     try {
       const response = await axios.get(`${API_SERVER}/conversation/${conversationId}`)
       if (response) {
+        setCon(response.data.conversation)
         setGroupName(response.data.conversation.name)
         setFileUrl(response.data.conversation.avatar_url)
         setOldFileUrl(response.data.conversation.avatar_url)
@@ -101,7 +104,7 @@ export default function UpdateChatModal() {
     }
   }
 
-  const onLeaveGroup =async() => {
+  const onLeaveGroup = async () => {
     try {
       const filteredParticipants = participants.filter(item => item !== '' && item !== `${user?.email}`);
       const data = {
@@ -182,7 +185,9 @@ export default function UpdateChatModal() {
         onClick={(e) => { e.stopPropagation() }}
       >
         <div className="flex justify-between border-b pb-2">
-          <div className="font-bold text-black" >Update Group</div>
+          <div className="font-bold text-black" >
+            {con?.type === GroupType.PRIVATE ? 'Update chat' : "Update group"}
+          </div>
           <div
             className="font-normal text-[#303030] cursor-pointer hover:bg-slate-300 rounded-full"
             onClick={onCancel}
@@ -205,16 +210,18 @@ export default function UpdateChatModal() {
           </div>
         </div>
 
-        <div className="font-bold text-black mt-3" >Add members</div>
-        <div className="w-full">
-          <InputField
-            type="text"
-            placeholder="Find member"
-            value={findingParticipant}
-            onChange={(e) => setFindingParticipant(e.target.value)}
-            className="text-black"
-          />
-        </div>
+        {con?.type === GroupType.GROUP && <div className="font-bold text-black mt-3" >Add members</div>}
+        {con?.type === GroupType.GROUP &&
+          <div className="w-full">
+            <InputField
+              type="text"
+              placeholder="Find member"
+              value={findingParticipant}
+              onChange={(e) => setFindingParticipant(e.target.value)}
+              className="text-black"
+            />
+          </div>
+        }
 
         {isLoading &&
           <div className="w-full mt-2">
@@ -222,7 +229,7 @@ export default function UpdateChatModal() {
           </div>
         }
 
-        {foundParticipant &&
+        {foundParticipant && 
           <div className="text-black flex h-[50px] mt-2 justify-between">
             <div className="flex items-center">
               <div className="w-[50px] h-[50px]">
@@ -251,6 +258,7 @@ export default function UpdateChatModal() {
           </div>
         }
 
+        {con?.type === GroupType.GROUP &&
         <div className="text-black mt-2">
           {participants.map((participant, index) => {
             return (
@@ -276,13 +284,13 @@ export default function UpdateChatModal() {
           <div className="mt-2 w-full flex justify-end"
             onClick={onLeaveGroup}
           >
-            <div 
+            <div
               className="border border-[#BDBDBD] rounded-lg px-2 w-fit cursor-pointer bg-orange-300 hover:bg-orange-400 transition-all duration-300"
             >
               Leave group
             </div>
           </div>
-        </div>
+        </div>}
 
         <div className="flex justify-end w-full h-fit mt-2">
           <button

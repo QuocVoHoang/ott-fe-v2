@@ -9,6 +9,8 @@ import {
   isBodyLoadingState,
   isOpenModalState,
   isPageLoadingState, 
+  isSidebarOpenState, 
+  navigationState, 
   snackbarState, 
   userState 
 } from "@/jotai/jotai-state"
@@ -18,6 +20,7 @@ import { useEffect } from "react"
 import { API_SERVER } from "@/constants/constants";
 import Modal from "@/components/Modals/Modal"
 import Snackbar from "@/components/Snackbar/Snackbar"
+import { Navigation } from "@/constants/enum"
 
 export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const router = useRouter()
@@ -28,6 +31,18 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
   const [isOpenModal,] = useAtom(isOpenModalState)
   const [isAuthenticated] = useAtom(isAuthenticatedState)
   const [showSnackbar, ] = useAtom(snackbarState) 
+  const [, setSidebarOpen] = useAtom(isSidebarOpenState)
+  const [, setNavigation] = useAtom(navigationState)
+
+  useEffect(() => {
+    if(pathname === '/contact'){
+      setSidebarOpen(false)
+      setNavigation(Navigation.CONTACT)
+    } else {
+      setSidebarOpen(true)
+      setNavigation(Navigation.CHAT)
+    }
+  }, [pathname])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -84,13 +99,14 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
       {isPageLoading &&
         <div className="w-screen h-screen flex items-center justify-center">
         <LoadingSpinner />
-      </div>}
+      </div>
+      }
       {!isPageLoading && 
       <div className="w-full h-full flex overflow-hidden bg-[#EFF6FC] relative">
         {showSnackbar &&
           <Snackbar />
         }
-        {pathname !== '/signin' && pathname !== '/signup' && 
+        {pathname !== '/signin' && pathname !== '/signup' && !pathname.includes('channel') &&
           <LeftSideBar />
         }
         <div className="flex flex-col">
@@ -100,7 +116,7 @@ export default function AuthWrapper({children}:{children: React.ReactNode}) {
             </div>
           }
           {!isBodyLoading && 
-            <div className="w-chat-container h-main-body-height my-5 pr-5">
+            <div className={`w-chat-container h-main-body-height ${pathname.includes('channel') ? 'm-0 p-0' : 'my-5 pr-5'}`}>
               {children}
             </div>
           }

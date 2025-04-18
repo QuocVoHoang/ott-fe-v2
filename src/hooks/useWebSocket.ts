@@ -36,7 +36,11 @@ export const useWebSocket = () => {
 
   useEffect(() => {
     loadMessagesInConversation();
-    const ws = new WebSocket(`${API_SERVER}/message/ws?conversation_id=${conversationId}`);
+
+    const wsProtocol = API_SERVER.startsWith('https') ? 'wss://' : 'ws://';
+    const wsHost = API_SERVER.replace(/^https?:\/\//, '');
+    const wsUrl = `${wsProtocol}${wsHost}/message/ws?conversation_id=${conversationId}`;
+    const ws = new WebSocket(wsUrl);
     
     ws.onopen = () => {
       console.log("MỞ KẾT NỐI WEBSOCKET!", conversationId);

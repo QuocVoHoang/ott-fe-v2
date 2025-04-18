@@ -9,7 +9,6 @@ import { useState } from "react";
 import NewChatButton from "./NewChatButton/NewChatButton";
 import GroupChatList from "./GroupChatList/GroupChatList";
 import FriendList from "./FriendList/FriendList";
-import NewFriendButton from "./NewFriendButton/NewFriendButton";
 
 
 export default function LeftSideBar() {
@@ -30,25 +29,24 @@ export default function LeftSideBar() {
           <Navigator key={index} item={menu} sidebarOpen={sidebarOpen}/>
         )}
 
-        <div className="w-sidebar-second-component h-full mx-5 flex flex-col">
-          <SearchComponent query={query} setQuery={setQuery}/>
-          <div className="w-full h-group-people-height flex flex-col justify-between mt-4 pb-2">
-            <div className="w-full h-[49%]">
-              <FriendList />
+        {sidebarOpen &&
+          <div className="w-sidebar-second-component h-full mx-5 flex flex-col">
+            <SearchComponent query={query} setQuery={setQuery}/>
+            <div className="w-full h-group-people-height flex flex-col justify-between mt-4 pb-2">
+              <div className="w-full h-[49%]">
+                <FriendList />
+              </div>
+              <div className="w-full h-[50%]">
+                <GroupChatList />
+              </div>
             </div>
-            <div className="w-full h-[50%]">
-              <GroupChatList />
+            <div className="flex flex-row justify-between">
+              <div className="w-[100%]">
+                <NewChatButton />
+              </div>
             </div>
           </div>
-          <div className="flex flex-row justify-between">
-            <div className="w-[49%]">
-              <NewChatButton />
-            </div>
-            <div className="w-[49%]">
-              <NewFriendButton />
-            </div>
-          </div>
-        </div>
+        }
       </div>
       
     </div>

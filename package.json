@@ -11,6 +11,9 @@
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
     "@prisma/client": "^6.4.0",
+    "@tencentcloud/call-uikit-react": "^4.0.5",
+    "agora-rtc-react": "^2.4.0",
+    "agora-rtc-sdk-ng": "^4.23.2",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
@@ -23,6 +26,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-phone-number-input": "^3.4.12",
     "yup": "^1.6.1"
   },
   "devDependencies": {

@@ -7,6 +7,8 @@ import { useRouter } from "@/i18n/routing"
 import { useEffect, useRef, useState } from "react"
 import ConversationPanel from "../ConversationPanel/ConversationPanel"
 import { IConversation } from "@/constants/interface"
+import { API_SERVER } from "@/constants/constants"
+import axios from "axios"
 
 export default function GroupChatList() {
   const {
@@ -15,13 +17,15 @@ export default function GroupChatList() {
 
   return (
     <div className="w-full h-full bg-white rounded-[25px] p-2 shadow-[0px_4px_5px_2px_rgba(121,197,239,0.38)] relative">
-      <div className="font-bold">Groups</div>
+      <div className="font-bold h-[10%]">Groups</div>
+      <div className="h-[90%] overflow-auto">
       {conversations.length > 0 && conversations.map((conversation, index) => (
         <ChatItem
           key={index}
           conversation={conversation}
         />
       ))}
+      </div>
     </div>
   )
 }
@@ -34,6 +38,21 @@ function ChatItem({
   conversation
 }: Props) {
   const router = useRouter()
+  const [preview, setPreview] = useState<string>('')
+  const onGetPreview =async() => {
+    try {
+      const response = await axios.get(`${API_SERVER}/message/get-mess/${conversation.last_message_id}`)
+      if(response) {
+        setPreview(response.data.content)
+      }
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    onGetPreview()
+  }, [])
 
   const [showPanel, setShowPanel] = useState<boolean>(false)
   const panelRef = useRef<HTMLDivElement>(null);
@@ -89,17 +108,12 @@ function ChatItem({
       <div className="w-chat-item h-full flex flex-col justify-center px-3 overflow-hidden">
         <div className="text-black font-bold flex flex-row justify-between">
           {conversation.name}
-          <div className="text-gray-600 font-normal">
+          <div className="text-gray-600 font-normal text-xs">
             {formatDateTime(conversation.updated_at)}
           </div>
         </div>
         <div className="text-gray-600 flex justify-between">
-          preview
-          <div className="w-[20px] h-full flex items-center ">
-            <div className="w-[20px] h-[20px] rounded-full bg-red-600 flex items-center justify-center text-white font-normal">
-              1
-            </div>
-          </div>
+          {preview && preview}
         </div>
       </div>
 
@@ -111,7 +125,7 @@ function ChatItem({
       >
         <EllipsisVertical />
         {showPanel &&
-          <div className="absolute top-[-55px] right-0 z-50" ref={panelRef}>
+          <div className="absolute top-[-20px] right-0 z-50" ref={panelRef}>
             <ConversationPanel />
           </div>
         }

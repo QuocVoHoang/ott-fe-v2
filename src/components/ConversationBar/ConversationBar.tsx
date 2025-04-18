@@ -68,10 +68,6 @@ export default function ConversationBar({
 
   }, [allUsers, currentConversation])
 
-  useEffect(() => {
-    console.log('dis', displayName)
-  }, [displayName])
-
   return (
     <div className="w-full h-full px-5">
       <div className="w-full h-full border-b border-[#B4ABAB] flex items-center justify-between">
@@ -100,9 +96,6 @@ export default function ConversationBar({
         </div>
 
         <div className="flex items-center">
-          <div className="w-[50px] h-[50px] flex items-center justify-center cursor-pointer hover:bg-slate-200 duration-300 transition-all rounded-full">
-            <Phone />
-          </div>
           <div
             className="w-[50px] h-[50px] flex items-center justify-center cursor-pointer hover:bg-slate-200 duration-300 transition-all rounded-full"
             onClick={handleClick}

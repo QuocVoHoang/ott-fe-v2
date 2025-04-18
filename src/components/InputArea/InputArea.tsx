@@ -9,6 +9,7 @@ import { Send, Laugh } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import UploadFile from "../UploadFile/UploadFile"
+import EmojiPicker from "../EmojiPicker"
 
 export default function InputArea() {
   const [input, setInput] = useState<string>('')
@@ -19,6 +20,12 @@ export default function InputArea() {
 
   const [user,] = useAtom(userState)
   const [fileUrl, setFileUrl] = useState<string>('')
+  const [showPicker, setShowPicker] = useState<boolean>(false);
+
+  const handleEmojiSelect = (emoji: { native: string }) => {
+    setInput((prev) => prev + emoji.native);
+    setShowPicker(false);
+  };
 
   const onChangeFileUrl = (url: string) => {
     setFileUrl(url)
@@ -37,6 +44,7 @@ export default function InputArea() {
       setInput('')
       setFileUrl('')
     }
+    setShowPicker(false)
   }
 
   useEffect(() => {
@@ -62,8 +70,14 @@ export default function InputArea() {
             className="w-full h-full px-2 text-black bg-[#EFF6FC] focus:outline-none"
           />
         </div>
-        <div className="w-[50px] h-[50px] flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300">
+        <div 
+          className="w-[50px] h-[50px] flex justify-center items-center cursor-pointer rounded-full hover:bg-[#a6cbeb] transition-all duration-300"
+          onClick={() => setShowPicker((prev) => !prev)}
+        >
           <Laugh className="text-gray-600 " />
+          {showPicker && 
+            <EmojiPicker onSelect={handleEmojiSelect} />
+          }
         </div>
       </div>
       <div

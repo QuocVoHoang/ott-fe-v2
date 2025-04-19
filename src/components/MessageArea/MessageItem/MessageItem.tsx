@@ -88,11 +88,11 @@ export default function MessageItem({
           <div className={`flex items-center`}>
             {fileType === "image" && <Image src={message.file_url!} alt="Uploaded File" width={300} height={300} />}
             {fileType === "video" && <video src={message.file_url!} controls width={300} height={300} />}
-            {fileType === "audio" && <audio src={message.file_url!} controls className="w-[300px] h-[300px]" />}
-            {fileType === "pdf" && <DownloadFile name={message.file_url!} icon={<FileText className="text-red-700" />} />}
-            {fileType === "document" && <DownloadFile name={message.file_url!} icon={<FileText className="text-blue-700" />} />}
-            {fileType === "text" && <DownloadFile name={message.file_url!} icon={<FileText className="text-green-700" />} />}
-            {fileType === "code" && <DownloadFile name={message.file_url!} icon={<Code className="text-gray-700" />} />}
+            {fileType === "audio" && <audio src={message.file_url!} controls className="w-[300px]" />}
+            {fileType === "pdf" && <DownloadFile isUser={isUser} name={message.file_url!} icon={<FileText className="text-red-700" />} />}
+            {fileType === "document" && <DownloadFile isUser={isUser} name={message.file_url!} icon={<FileText className="text-blue-700" />} />}
+            {fileType === "text" && <DownloadFile isUser={isUser} name={message.file_url!} icon={<FileText className="text-green-700" />} />}
+            {fileType === "code" && <DownloadFile isUser={isUser} name={message.file_url!} icon={<Code className="text-gray-700" />} />}
             {fileType === "unknown" && <p>Unknow file</p>}
           </div> :
           <div className="flex items-center min-h-[50px] max-w-[60%]">
@@ -137,9 +137,9 @@ export default function MessageItem({
   )
 }
 
-function DownloadFile({ name, icon }: { name: string, icon: JSX.Element }) {
+function DownloadFile({ name, icon, isUser }: { name: string, icon: JSX.Element, isUser: boolean }) {
   return (
-    <a className="w-[500px] flex justify-end overflow-hidden whitespace-nowrap text-ellipsis my-2"
+    <a className={`w-[500px] flex ${isUser ? 'justify-end' : 'justify-start'}  overflow-hidden whitespace-nowrap text-ellipsis my-2`}
       href={name}
     >
       <div className="w-fit h-fit flex hover:bg-slate-200 cursor-pointer transition-all duration-300 p-2 rounded-lg">

@@ -26,7 +26,6 @@ export default function ConversationBar({
     try {
       const response = await axios.get(`${API_SERVER}/conversation/${conversationId}`)
       setCurrentConversation(response.data.conversation)
-      console.log('response.data.conversation', response.data.conversation.created_by)
     } catch (e) {
       console.error(e)
     }
@@ -58,11 +57,9 @@ export default function ConversationBar({
       if (currentConversation!.created_by === user?.id) {
         const name = allUsers.find(p => p.id !== user.id)
         setDisplayName(`${name?.username}`)
-        console.log('name1', name?.username)
       } else {
         const name = allUsers.find(p => p.id === currentConversation!.created_by)
         setDisplayName(`${name?.username}`)
-        console.log('name2', name?.username)
       }
     }
 

@@ -34,44 +34,11 @@ export default function Page() {
         const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
         clientRef.current = client;
 
-        await client.join(appId, channelName, token, uid);
-        const localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
-        localTracksRef.current = localTracks;
-
-        if (localVideoRef.current) {
-          localTracks[1].play(localVideoRef.current);
-        }
-
-        await client.publish(localTracks);
-
-        // Lấy danh sách người dùng hiện có trong kênh
-        const existingUsers = client.remoteUsers || [];
-        const initialRemoteUsers: RemoteUser[] = existingUsers.map((user) => ({
-          uid: String(user.uid),
-          videoTrack: user.videoTrack || null,
-          audioTrack: user.audioTrack || null,
-        }));
-
-        setRemoteUsers(initialRemoteUsers);
-
-        // Đăng ký và phát các track của người dùng hiện có
-        for (const user of existingUsers) {
-          if (user.videoTrack) {
-            await client.subscribe(user, "video");
-            const remoteVideoDiv = document.getElementById(`remote-${user.uid}`);
-            if (remoteVideoDiv) {
-              user.videoTrack.play(remoteVideoDiv);
-            }
-          }
-          if (user.audioTrack) {
-            await client.subscribe(user, "audio");
-            user.audioTrack.play();
-          }
-        }
-
-        // Đăng ký sự kiện user-published
+        // Đăng ký các sự kiện trước khi join
         client.on("user-published", async (user, mediaType) => {
           await client.subscribe(user, mediaType);
+          console.log(`User ${user.uid} published ${mediaType}`);
+
           setRemoteUsers((prev) => {
             const exists = prev.find((u) => u.uid === String(user.uid));
             if (exists) {
@@ -89,24 +56,15 @@ export default function Page() {
               ...prev,
               {
                 uid: String(user.uid),
-                videoTrack: user.videoTrack || null,
-                audioTrack: user.audioTrack || null,
+                videoTrack: mediaType === "video" ? user.videoTrack || null : null,
+                audioTrack: mediaType === "audio" ? user.audioTrack || null : null,
               },
             ];
           });
-
-          if (mediaType === "video" && user.videoTrack) {
-            const remoteVideoDiv = document.getElementById(`remote-${user.uid}`);
-            if (remoteVideoDiv) {
-              user.videoTrack.play(remoteVideoDiv);
-            }
-          }
-          if (mediaType === "audio") {
-            user.audioTrack?.play();
-          }
         });
 
         client.on("user-unpublished", (user, mediaType) => {
+          console.log(`User ${user.uid} unpublished ${mediaType}`);
           setRemoteUsers((prev) =>
             prev.map((u) =>
               u.uid === String(user.uid)
@@ -121,19 +79,30 @@ export default function Page() {
         });
 
         client.on("user-left", (user) => {
+          console.log(`User ${user.uid} left`);
           setRemoteUsers((prev) => prev.filter((u) => u.uid !== String(user.uid)));
         });
 
+        // Join kênh
+        await client.join(appId, channelName, token, uid);
+        const localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
+        localTracksRef.current = localTracks;
+
+        if (localVideoRef.current) {
+          localTracks[1].play(localVideoRef.current);
+        }
+
+        await client.publish(localTracks);
         setJoined(true);
         return;
       } catch (error) {
-        console.error(`Thử lần ${attempt} thất bại:`, error);
+        console.error(`Attempt ${attempt} failed:`, error);
         if (attempt < retries) {
           await new Promise((resolve) => setTimeout(resolve, delay));
         }
       }
     }
-    console.error("Không thể join phòng sau nhiều lần thử");
+    console.error("Failed to join channel after multiple attempts");
   };
 
   const leaveChannel = async () => {
@@ -162,9 +131,34 @@ export default function Page() {
 
       setJoined(false);
     } catch (error) {
-      console.error("Lỗi khi rời phòng:", error);
+      console.error("Error leaving channel:", error);
     }
   };
+
+  // Đồng bộ video tracks với DOM
+  useEffect(() => {
+    remoteUsers.forEach((user) => {
+      if (user.videoTrack) {
+        const remoteVideoDiv = document.getElementById(`remote-${user.uid}`);
+        if (remoteVideoDiv) {
+          try {
+            user.videoTrack.play(remoteVideoDiv);
+            console.log(`Playing video for user ${user.uid}`);
+          } catch (error) {
+            console.error(`Failed to play video for user ${user.uid}:`, error);
+          }
+        }
+      }
+      if (user.audioTrack) {
+        try {
+          user.audioTrack.play();
+          console.log(`Playing audio for user ${user.uid}`);
+        } catch (error) {
+          console.error(`Failed to play audio for user ${user.uid}:`, error);
+        }
+      }
+    });
+  }, [remoteUsers]);
 
   useEffect(() => {
     joinChannel();
@@ -179,13 +173,13 @@ export default function Page() {
         <div className="w-80 h-60 bg-black">
           <div ref={localVideoRef} className="w-full h-full"></div>
         </div>
-        {remoteUsers.map((user) => (  
+        {remoteUsers.map((user) => (
           <div key={user.uid} className="w-80 h-60 bg-black">
             <div id={`remote-${user.uid}`} className="w-full h-full"></div>
           </div>
         ))}
       </div>
-      <p className="mt-4">{joined ? `Đã join phòng với ${remoteUsers.length} người khác` : "Đang kết nối..."}</p>
+      <p className="mt-4">{joined ? `Joined room with ${remoteUsers.length} others` : "Connecting..."}</p>
     </div>
   );
 }

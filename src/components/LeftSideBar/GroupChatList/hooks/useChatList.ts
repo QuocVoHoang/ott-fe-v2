@@ -31,7 +31,6 @@ export default function useChatList() {
   useEffect(() => {
     if (conversations && conversations.length > 0) {
       const filtered = conversations.filter(c => c.type === GroupType.GROUP);
-      console.log(filtered)
       setCons(filtered);
     }
   }, [conversations])

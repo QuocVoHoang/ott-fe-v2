@@ -112,7 +112,7 @@ function ChatItem({
             {formatDateTime(conversation.updated_at)}
           </div>
         </div>
-        <div className="text-gray-600 flex justify-between">
+        <div className="text-gray-600 flex justify-between overflow-hidden whitespace-nowrap text-ellipsis">
           {preview && preview}
         </div>
       </div>

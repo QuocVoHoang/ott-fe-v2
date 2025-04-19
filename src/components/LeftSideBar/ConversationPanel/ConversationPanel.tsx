@@ -21,7 +21,6 @@ export default function ConversationPanel() {
     try {
       const response = await axios.get(`${API_SERVER}/conversation/${conversationId}`)
       setCon(response.data.conversation)
-      console.log(response.data)
       if(user?.id === response.data.conversation.created_by) {
         setIsUser(true)
       } else {

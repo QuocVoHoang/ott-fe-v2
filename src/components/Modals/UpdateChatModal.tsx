@@ -184,7 +184,7 @@ export default function UpdateChatModal() {
       <div className="w-[500px] h-fit bg-white rounded-lg p-5 flex flex-col"
         onClick={(e) => { e.stopPropagation() }}
       >
-        <div className="flex justify-between border-b pb-2">
+        <div className={`flex justify-between border-b pb-2`}>
           <div className="font-bold text-black" >
             {con?.type === GroupType.PRIVATE ? 'Update chat' : "Update group"}
           </div>
@@ -201,7 +201,7 @@ export default function UpdateChatModal() {
               onChangeFileUrl={onChangeFileUrl}
             />
           </div>
-          <div className="w-[376px]">
+          <div className={`w-[376px] ${con?.type === GroupType.PRIVATE && 'pointer-events-none'}`}>
             <InputField
               placeholder="Input group name"
               value={groupName}

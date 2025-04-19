@@ -114,10 +114,7 @@ export default function MessageItem({
 
         {showPanel &&
           <div className="flex items-center">
-            <div className="w-fit mx-2 h-[50px] rounded-lg border border-[#BDBDBD]" ref={panelRef}>
-              <div className="h-[25px] px-2 flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-all duration-300 rounded-t-lg">
-                Edit
-              </div>
+            <div className="w-fit mx-2 h-[25px] rounded-lg border border-[#BDBDBD]" ref={panelRef}>
               <div
                 className="h-[25px] px-2 flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-all duration-300 rounded-b-lg"
                 onClick={() => {
@@ -139,7 +136,7 @@ export default function MessageItem({
 
 function DownloadFile({ name, icon, isUser }: { name: string, icon: JSX.Element, isUser: boolean }) {
   return (
-    <a className={`w-[500px] flex ${isUser ? 'justify-end' : 'justify-start'}  overflow-hidden whitespace-nowrap text-ellipsis my-2`}
+    <a className={`w-fit flex ${isUser ? 'justify-end' : 'justify-start'}  overflow-hidden whitespace-nowrap text-ellipsis my-2`}
       href={name}
     >
       <div className="w-fit h-fit flex hover:bg-slate-200 cursor-pointer transition-all duration-300 p-2 rounded-lg">
